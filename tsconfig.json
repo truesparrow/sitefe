@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "commonjs",
+        "allowJs": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strictNullChecks": true,
+        "sourceMap": true,
+	      "experimentalDecorators": true,
+	      "jsx": "react",
+        "outDir": "./out"
+    },
+    "include": [
+        "./src/server/**/*",
+        "./src/shared/**/*"
+    ],
+    "exclude": [
+	      "./node_modules"
+    ]
+}

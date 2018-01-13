@@ -1,0 +1,66 @@
+language: node_js
+
+node_js:
+- "node"
+
+sudo: required
+
+cache:
+  directories:
+    - node_modules
+
+services:
+  - postgresql
+  - docker
+
+addons:
+  postgresql: "9.6"
+
+env:
+  global:
+  - ENV=TEST
+  - ADDRESS=0.0.0.0
+  - PORT=10000
+  - ORIGIN=null
+  - IDENTITY_SERVICE_HOST=null
+  - LOGGLY_TOKEN=null
+  - LOGGLY_SUBDOMAIN=null
+  - ROLLBAR_SERVER_TOKEN=null
+  - ROLLBAR_CLIENT_TOKEN=null
+  - GEMFURY_USER=truesparrow
+  # GEMFURY_API_KEY=???
+  - secure: "uEiaceH4szs6OKdnrW2Of00TCCn1RRIlViFVLNGgo70az5JqmFh0YZwU7lI3XYIRF/cI970HXIWwB6ITMUwUoBbYxx5jNhlZoDq5gD3jdywQBz97g3vHwYjk5Zg3Tr5yr50PZNuYljWzIAomGmVn3so4XbNPSCyPBjWgomAC6ePcy6lg1qRHxyXVw8mV5nyutMHNj/RNRbDGjfkO+Dq3SuaGtdEoVSq1lG3GykjbwBY0jc5orIIOiTiZi6pAFOCgbpnYn/30VqlRUlcDt7c7TXEhazCuTJocMj3XqvB449IH2m929USMJGqDXv6/HMPklUiMVYnp51t28HBLsO0U8EggVvXJUeg95zCPAplhmeMWs0cruhiHQQHS89NwzoPAKFH6qZYvolZlSlvW5radYJh1+EvQ7lPupI1f3ZDZHlM/1yRmvvCb1ng6Jn7ciFcG3Ei/a+0LY+ouTDt1zhvUsp+2d+3elPQFBeWIWDVgSIgEKgSdhlMEw9P5YsZxxRIX1gn8U+LDjGvA7/I47yZqm9jdpXU3UbWlsLMN6qG6lPModt1ti7Vk4O5A4mnYq7KrJeWJSXkBzzMQCi0a7RcSzMAYBmC3RIouLGGJiFNvmIzV0QXCDZWUVbyJPzkbdm2XU6B1k+C0Q0UKvYWnq824JXumkqB+Ur2LbbfpxK6caLw="
+  # - DOCKER_HUB_USERNAME=horia141
+  # # DOCKER_HUB_PASSWORD
+  # - secure: "uNmyctxlaBP1eM0enb8+OI5pWUyANh7wMluyQ7j6MwXjZmdMEWRX7fshG1y/OucfxoTZWil3OHFm4s0t04ZcLyIMJ+sNIZAta+qy0x9kc7q6VLGiud+/lp7GF1eiHf/appwkiAZHiEPAxnl3+YiYZ4Kf/PiwzJ0gCvpT5dPlltHw+OHUQ2VElO849/XSMpSyOVcaUEKo9z5H3iyfGvaQmUQLokL492D0eIsYkLfo0S0rhMtbDrpdG9qvVfcdKblawboK2e1twbm5R9T5psZrR/3XAXFAt25Yw3g39zPbJuK0vWFCuLAdWEwiGp8hl432pXHOaKaMgBeq9G1eQsdwsOLuDNvr5ujLG6HihlRXjQ+UveHsAjsOGCsD/eah5tgbQ7CQIAoPUrKplZG8GrZiRA7oKecNDiNotmDWawGmk1tEczxzYh1M5k/NL5NASwQBATbhiqXDW9U4pkxKuTv4orJ4i+VhoCVPKQYGih+9QDfGSvaiYtn0E//K58x8qv0pZwnjq2g4Kx6NWX42UpnIFYgfVx1wZ9ixRZbYc8cT8pMcKTBt1P9uVLGcj0HDxIDKQTcClYJV5pdOm15xjkLSbf+UvJxqCHRSPM+wSv9d83O627EJsCBvZ7dUKXDc27DhZMUi3e/cej6MMb7Mtd5voFdK2eFw4RIFsUCqVjFPcU4="
+
+install:
+- npm install --registry=https://npm-proxy.fury.io/${GEMFURY_API_KEY}/${GEMFURY_USER}/ --progress=false
+
+before_script:
+- psql -c 'create database truesparrow;' -U postgres
+
+script:
+- npm run test
+
+after_success:
+- npm run push-coverage-to-codecov
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: $(npm bin)/togemfury --user ${GEMFURY_USER} --api_key ${GEMFURY_API_KEY}
+  on:
+    tags: true
+# - provider: script
+#   skip_cleanup: true
+#   script: docker build --tag truesparrow/blogfe:$TRAVIS_TAG . && docker tag truesparrow/blogfe:$TRAVIS_TAG truesparrow/blogfe:latest && docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD" && docker push truesparrow/blogfe:$TRAVIS_TAG && docker push truesparrow/blogfe:latest
+#   on:
+#     tags: true
+# - provider: heroku
+#   skip_cleanup: true
+#   app: blogfe-staging-truesparrow
+#   api_key:
+#     secure: "bkrJktWntQN9CX+C1/u3Hbg81EeJ7siSN6qgYC8l92vCe7KiguxpXa8LyYUmw/rtmCOBrYx51QWzBc2ivaDgrfFepjA4cMDgkTGUwCEJOYwos9Dq1S6AlQPiCsPoI/GtLCPbJf7cntf8iqJiMt4GfqUDEfvagCF5qOiphQtjmCY3wrFcDDB1PgbsBTYq596eEgKr1OcLt8965AL6Krad36WcpMRTTtqVujZdFR3U+VCWCfLd6N6NAWWt8+wUkjMmK2qzv8r1QyUDfmlJbhoh9SrTmP7nIjqhGmo0NTM/j4ANOic+17xhY9I93qTjpmiFO9OZcpa24L/928wMKYB0TH7EppRoODWzOd0PNdYtY3b5BWo2Uxt+HJPH9Mh9GL76A/6mlxNUTzKRo3/uiLloIWQLmEpETjbdMwS2YVpNrsBAEjdS1LO1NkesDXqzyxelODxTNn31tbfGvT/HAPq1/GhDy7gJa3MPdEAMaTMqfOM/Ursejx4sSrJDgsXKG0equJOwTrGY55NGkUUABUDJOM4hMkars/9Q88S+wVWUyV6ruWoKfDy/ljhBSBooT0PLI9nfbsAvV452GTMp/xlkoLcZGtsrHph3TWOQnWT8Q1AEpVVx1fweD8epUCv7wyCJ7uKTq6nJODdZm1mVDkwYIkF4ntpw0uKRONvAB8ePN2M="
+#   on:
+#     tags: true
