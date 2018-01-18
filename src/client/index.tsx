@@ -8,6 +8,7 @@ import * as Rollbar from 'rollbar'
 import { isOnServer, envToString } from '@truesparrow/common-js'
 
 import * as config from './config'
+import './index.less'
 import { App } from '../shared/app'
 import { ClientInitialState } from '../shared/client-data'
 import * as services from '../shared/services'
