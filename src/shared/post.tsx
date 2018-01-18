@@ -1,3 +1,7 @@
 import * as React from 'react'
 
-export const PostPage = () => <div>A post page</div>;
+import * as config from './config'
+
+import * as text from './post.text'
+
+export const PostPage = () => <div>{text.postPage[config.LANG()]}</div>;
