@@ -199,7 +199,7 @@ async function main() {
     // ********************
 
     app.listen(config.PORT, config.ADDRESS, () => {
-        console.log(`Started ${config.NAME} ... ${config.ADDRESS}:${config.PORT}`);
+        console.log(`Started ${config.NAME} service on ${config.ADDRESS}:${config.PORT}`);
     });
 }
 
