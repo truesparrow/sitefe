@@ -14,6 +14,7 @@ import * as webpack from 'webpack'
 import * as theWebpackDevMiddleware from 'webpack-dev-middleware'
 import * as serializeJavascript from 'serialize-javascript'
 
+import { inferLanguage } from '@truesparrow/business-rules-js'
 import { isLocal } from '@truesparrow/common-js'
 import {
     IdentityClient,
@@ -41,7 +42,6 @@ import { App } from '../shared/app'
 import * as config from '../shared/config'
 import { ClientConfig, ClientInitialState } from '../shared/client-data'
 import { createStoreFromInitialState, reducers } from '../shared/store'
-import { inferLanguage } from '../shared/utils'
 
 
 async function main() {

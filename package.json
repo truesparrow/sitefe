@@ -26,7 +26,8 @@
         "tsconfig.client.json": "c:tsconfig.client.json"
     },
     "dependencies": {
-        "@truesparrow/common-js": "=0.0.1",
+        "@truesparrow/business-rules-js": "=0.0.3",
+        "@truesparrow/common-js": "=0.0.2",
         "@truesparrow/common-server-js": "=0.0.1",
         "@truesparrow/content-sdk-js": "=0.0.1",
         "@truesparrow/identity-sdk-js": "=0.0.1",

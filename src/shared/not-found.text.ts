@@ -1,4 +1,4 @@
-import { Message } from './messages'
+import { Message } from '@truesparrow/common-js'
 
 
 export const notFound: Message = {
