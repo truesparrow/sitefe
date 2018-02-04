@@ -26,11 +26,11 @@
         "tsconfig.client.json": "c:tsconfig.client.json"
     },
     "dependencies": {
-        "@truesparrow/business-rules-js": "=0.0.3",
-        "@truesparrow/common-js": "=0.0.2",
-        "@truesparrow/common-server-js": "=0.0.1",
-        "@truesparrow/content-sdk-js": "=0.0.1",
-        "@truesparrow/identity-sdk-js": "=0.0.1",
+        "@truesparrow/business-rules-js": "latest",
+        "@truesparrow/common-js": "latest",
+        "@truesparrow/common-server-js": "latest",
+        "@truesparrow/content-sdk-js": "latest",
+        "@truesparrow/identity-sdk-js": "latest",
         "async-middleware": "=1.2.1",
         "compression": "=1.7.1",
         "cookie-parser": "=1.4.3",
@@ -53,7 +53,7 @@
         "webpack-dev-middleware": "=2.0.1"
     },
     "devDependencies": {
-        "@truesparrow/togemfury": "=0.0.3",
+        "@truesparrow/togemfury": "latest",
         "@types/bluebird": "=3.5.18",
         "@types/chai": "=4.0.8",
         "@types/compression": "=0.0.35",
