@@ -3,37 +3,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
+const prodPlugins = require('./webpack.prod-plugins');
 
-const prodPlugins = [
-    new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-        mangle: true,
-        sourceMap: true,
-        compress: {
-            warnings: false, // Suppress uglification warnings
-            conditionals: true,
-            unused: true,
-            comparisons: true,
-            sequences: true,
-            dead_code: true,
-            evaluate: true,
-            if_return: true,
-            join_vars: true,
-            pure_getters: true,
-            unsafe: true,
-            unsafe_comps: true,
-            screw_ie8: true
-        },
-        output: {
-            comments: false
-        },
-        exclude: [/\.min\.js$/gi] // skip pre-minified libs
-    }),
-    new webpack.optimize.AggressiveMergingPlugin()
-];
 
 module.exports = {
     target: 'web',
@@ -43,7 +14,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'out', 'client'),
         publicPath: '/real/client/',
-        filename: '[name].js'
+        filename: '[name].js',
+        chunkFilename: '[name].chunk.js'
     },
     module: {
         rules: [{
@@ -69,7 +41,7 @@ module.exports = {
                 publicPath: '/real/client/'
             })
         }, {
-            test: /\.svg$/,
+            test: /\.svg|.png$/,
             include: [path.resolve(__dirname, 'src', 'shared', 'static')],
             loader: 'url-loader',
             options: {
@@ -110,21 +82,26 @@ module.exports = {
             {from: './src/shared/static/favicon.ico'},
             {from: './src/shared/static/humans.txt'},
             {from: './src/shared/static/robots.txt'},
-            {from: './src/shared/static/sitemap.xml'}
+            {from: './src/shared/static/sitemap.xml'},
+            {from: './out/client/vendor.bundle.js'}
         ]),
         new ExtractTextPlugin('client.css'),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function (module) {
-                // this assumes your vendor imports exist in the node_modules directory
-                return module.context && module.context.indexOf('node_modules') !== -1;
-            }
+        new webpack.DllReferencePlugin({
+            context: '.',
+            manifest: require(path.resolve(__dirname, 'out', 'client', 'vendor-manifest.json'))
         }),
+        new webpack.NoEmitOnErrorsPlugin(),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'vendor',
+        //     minChunks: function (module) {
+        //         // this assumes your vendor imports exist in the node_modules directory
+        //         return module.context && module.context.indexOf('node_modules') !== -1;
+        //     }
+        // }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest'
         })
-    ].concat(process.env.ENV !== 'LOCAL' ? prodPlugins : []),
+    ].concat(process.env.ENV !== 'LOCAL' ? prodPlugins.prodPlugins : []),
     resolve: {
         extensions: ['.js', '.ts', '.tsx', '.css', '.less'],
         modules: [

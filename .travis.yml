@@ -19,10 +19,12 @@ addons:
 env:
   global:
   - ENV=TEST
+  - CONTEXT=SERVER
   - ADDRESS=0.0.0.0
   - PORT=10000
   - ORIGIN=null
   - IDENTITY_SERVICE_HOST=null
+  - CONTENT_SERVICE_HOST=null
   - LOGGLY_TOKEN=null
   - LOGGLY_SUBDOMAIN=null
   - ROLLBAR_SERVER_TOKEN=null

@@ -1,3 +1,4 @@
+import { wrap } from 'async-middleware'
 import * as compression from 'compression'
 import { createNamespace } from 'continuation-local-storage'
 import * as express from 'express'
@@ -15,7 +16,22 @@ import * as theWebpackDevMiddleware from 'webpack-dev-middleware'
 import * as serializeJavascript from 'serialize-javascript'
 
 import { inferLanguage } from '@truesparrow/business-rules-js'
-import { isLocal } from '@truesparrow/common-js'
+import {
+    InternalWebFetcher,
+    isLocal,
+    WebFetcher
+} from '@truesparrow/common-js'
+import {
+    newCommonServerMiddleware,
+    newLocalCommonServerMiddleware,
+    newNamespaceMiddleware,
+    Request
+} from '@truesparrow/common-server-js'
+import {
+    // ContentPublicClient,
+    Event
+    // newContentPublicClient
+} from '@truesparrow/content-sdk-js'
 import {
     IdentityClient,
     newIdentityClient,
@@ -28,17 +44,9 @@ import {
     SessionLevel,
     SessionInfoSource
 } from '@truesparrow/identity-sdk-js/server'
-import {
-    InternalWebFetcher,
-    newCommonServerMiddleware,
-    newLocalCommonServerMiddleware,
-    newNamespaceMiddleware,
-    Request,
-    WebFetcher
-} from '@truesparrow/common-server-js'
 
 import { CompiledBundles, Bundles, WebpackDevBundles } from './bundles'
-import { App } from '../shared/app'
+import { AppFrame } from '../shared/app-frame'
 import * as config from '../shared/config'
 import { ClientConfig, ClientInitialState } from '../shared/client-data'
 import { createStoreFromInitialState, reducers } from '../shared/store'
@@ -54,7 +62,10 @@ async function main() {
     const clientInitialStateMarshaller = new (MarshalFrom(ClientInitialState))();
 
     const internalWebFetcher: WebFetcher = new InternalWebFetcher();
-    const identityClient: IdentityClient = newIdentityClient(config.ENV, config.ORIGIN, config.IDENTITY_SERVICE_HOST, internalWebFetcher);
+    const identityClient: IdentityClient = newIdentityClient(
+        config.ENV, config.ORIGIN, config.IDENTITY_SERVICE_HOST, internalWebFetcher);
+    /* const contentPublicClient: ContentPublicClient = newContentPublicClient(
+     *     config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, internalWebFetcher);*/
 
     const bundles: Bundles = isLocal(config.ENV)
         ? new WebpackDevBundles(theWebpackDevMiddleware(webpack(webpackConfig), {
@@ -75,6 +86,7 @@ async function main() {
         const clientConfig = {
             env: config.ENV,
             origin: config.ORIGIN,
+            contentServiceHost: config.CONTENT_SERVICE_HOST,
             rollbarClientToken: config.ROLLBAR_CLIENT_TOKEN,
             session: session,
             language: language
@@ -87,7 +99,7 @@ async function main() {
         const appHtml = ReactDOMServer.renderToString(
             <Provider store={store}>
                 <StaticRouter location={url} context={staticContext}>
-                    <App />
+                    <AppFrame />
                 </StaticRouter>
             </Provider>
         );
@@ -129,7 +141,7 @@ async function main() {
     app.use(compression({ threshold: 0 }));
 
     // Setup the /real portion of the path-space. Here are things which don't belong to the client-side
-    // interaction, but rather to the server-side one.
+    // interaction, but rather to the server-side one, callbacks from other services etc.
     // ********************
 
     // An API gateway for the client side code. Needs session to exist in the request.
@@ -181,14 +193,18 @@ async function main() {
     const appRouter = express.Router();
 
     appRouter.use(newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient));
-    appRouter.get('*', (req: RequestWithIdentity, res: express.Response) => {
+    appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
+        let event: Event | null = null;
+        console.log(req.hostname);
+        // TODO: here itś a whole differnt thing.
+
         const initialState: ClientInitialState = {
-            text: 'hello world'
+            event: event
         };
 
         const [content, specialStatus] = serverSideRender(
             req.url,
-            req.session, // TODO: use req.session here
+            req.session,
             initialState
         );
 
@@ -196,7 +212,7 @@ async function main() {
         res.type('html');
         res.write(content);
         res.end();
-    });
+    }));
 
     app.use('/', appRouter);
 

@@ -6,7 +6,7 @@ import * as React from 'react'
 import 'mocha'
 
 import * as config from './config'
-import { HomePage } from './home'
+import { HomePage } from './home-page'
 
 
 Enzyme.configure({adapter: new Adapter()});

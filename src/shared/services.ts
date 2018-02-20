@@ -1,18 +1,38 @@
 import * as Rollbar from 'rollbar'
 
-export let ROLLBAR_CLIENT: () => Rollbar;
-export let setServices: (rollbar: Rollbar) => void;
+import {
+    ApiGatewayWebFetcher,
+    isOnServer,
+    envToString
+} from '@truesparrow/common-js'
+import { ContentPublicClient, newContentPublicClient } from '@truesparrow/content-sdk-js'
 
-let rollbarClient: Rollbar | null = null;
+import * as config from './config'
 
-ROLLBAR_CLIENT = () => {
-    if (rollbarClient == null) {
-        throw new Error('Rollbar client not provided');
+
+const webFetcher = new ApiGatewayWebFetcher(config.ORIGIN);
+
+const contentPublicClient = newContentPublicClient(
+    config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, webFetcher);
+
+const rollbarClient = new Rollbar({
+    accessToken: isOnServer(config.ENV) ? (config.ROLLBAR_CLIENT_TOKEN as string) : 'FAKE_TOKEN_WONT_BE_USED_IN_LOCAL_OR_TEST',
+    logLevel: 'warning',
+    reportLevel: 'warning',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    enabled: isOnServer(config.ENV),
+    payload: {
+        // TODO: fill in the person field!
+        serviceName: config.NAME,
+        environment: envToString(config.ENV)
     }
+});
 
+export function CONTENT_PUBLIC_CLIENT(): ContentPublicClient {
+    return contentPublicClient;
+}
+
+export function ROLLBAR_CLIENT(): Rollbar {
     return rollbarClient;
-};
-
-setServices = (newRollbarClient: Rollbar) => {
-    rollbarClient = newRollbarClient;
 };

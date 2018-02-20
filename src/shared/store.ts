@@ -1,10 +1,12 @@
 import { combineReducers, createStore, Reducer, Store } from 'redux'
 
+import { Event } from '@truesparrow/content-sdk-js'
+
 import { ClientInitialState } from './client-data'
 
 
 export enum StatePart {
-    Foo = 0
+    Event = 0
 }
 
 
@@ -18,39 +20,41 @@ export enum OpState {
 }
 
 
-export interface FooInit {
-    part: StatePart.Foo,
+export interface EventInit {
+    part: StatePart.Event,
     type: OpState.Init;
 }
-export interface FooPreloaded {
-    part: StatePart.Foo,
+export interface EventPreloaded {
+    part: StatePart.Event,
     type: OpState.Preloaded;
-    text: string;
+    event: Event;
 }
-export interface FooLoading {
-    part: StatePart.Foo,
+export interface EventLoading {
+    part: StatePart.Event,
     type: OpState.Loading;
 }
-export interface FooReady {
-    part: StatePart.Foo;
+export interface EventReady {
+    part: StatePart.Event;
     type: OpState.Ready;
-    text: string;
+    eventIsDeleted: boolean;
+    event: Event | null;
 }
-export interface FooFailed {
-    part: StatePart.Foo;
+export interface EventFailed {
+    part: StatePart.Event;
     type: OpState.Failed;
     errorMessage: string;
 }
 
-export type FooState = FooInit | FooPreloaded | FooLoading | FooReady | FooFailed;
+export type EventState =
+    EventInit | EventPreloaded | EventLoading | EventReady | EventFailed;
 
-const fooInitialState: FooState = {
-    part: StatePart.Foo,
+const fooInitialState: EventState = {
+    part: StatePart.Event,
     type: OpState.Init
 };
 
-function foo(state = fooInitialState, action: FooState): FooState {
-    if (action.part != StatePart.Foo) {
+function event(state = fooInitialState, action: EventState): EventState {
+    if (action.part != StatePart.Event) {
         return state;
     }
 
@@ -69,18 +73,18 @@ function foo(state = fooInitialState, action: FooState): FooState {
 
 
 export const reducers: Reducer<any> = combineReducers({
-    foo: foo
+    event: event
 });
 
 
 export function createStoreFromInitialState(reducers: Reducer<any>, clientInitialState: ClientInitialState): Store<any> {
     const store = createStore(reducers);
 
-    if (clientInitialState.text != null) {
+    if (clientInitialState.event != null) {
         store.dispatch({
-            part: StatePart.Foo,
+            part: StatePart.Event,
             type: OpState.Preloaded,
-            text: clientInitialState.text
+            event: clientInitialState.event
         });
     }
 

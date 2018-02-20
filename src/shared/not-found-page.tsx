@@ -4,10 +4,10 @@ import * as HttpStatus from 'http-status-codes'
 
 import * as config from './config'
 
-import * as text from './not-found.text'
+import * as text from './not-found-page.text'
 
 
-export const NotFound = () => {
+export const NotFoundPage = () => {
     return (
         <Route render={({ staticContext }) => {
             if (staticContext) {

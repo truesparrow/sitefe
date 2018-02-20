@@ -4,38 +4,36 @@ import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 
 import * as config from './config'
-import { HomePage } from './home'
-import { NotFound } from './not-found'
-import { PostPage } from './post'
-import { FooState } from './store'
+import { HomePage } from './home-page'
+import { NotFoundPage } from './not-found-page'
+import { EventState } from './store'
 
-import * as text from './app.text'
+import * as text from './app-frame.text'
 
 
 export interface Props {
-    fooText: string;
+    // The event is null when it does not exist. Likely because we're accessing a subdomain which
+    // isn't used.
+    event: Event | null;
 }
 
 export interface State {
 }
 
-class _App extends React.Component<Props, State> {
+class _AppFrame extends React.Component<Props, State> {
     render() {
         return (
             <div>
                 <Helmet>
                     <title>{text.pageTitle[config.LANG()]}</title>
                 </Helmet>
-                {text.thisIsBlog[config.LANG()](this.props.fooText)}
                 <header>
                     <NavLink to="/" exact>{text.home[config.LANG()]}</NavLink>
-                    <NavLink to="/post">{text.post[config.LANG()]}</NavLink>
                 </header>
                 <main>
                     <Switch>
                         <Route exact path="/" component={HomePage} />
-                        <Route path="/post" component={PostPage} />
-                        <Route path="*" component={NotFound} />
+                        <Route path="*" component={NotFoundPage} />
                     </Switch>
                 </main>
             </div>
@@ -46,14 +44,14 @@ class _App extends React.Component<Props, State> {
 
 function stateToProps(state: any) {
     return {
-        fooText: state.foo.text
+        event: state.event.event
     };
 }
 
 
-function dispatchToProps(_dispatch: (newState: FooState) => void) {
+function dispatchToProps(_dispatch: (newState: EventState) => void) {
     return {};
 }
 
 
-export const App = withRouter(connect(stateToProps, dispatchToProps)(_App));
+export const AppFrame = withRouter(connect(stateToProps, dispatchToProps)(_AppFrame));

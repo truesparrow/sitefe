@@ -10,8 +10,8 @@
         "noUnusedParameters": true,
         "strictNullChecks": true,
         "sourceMap": true,
-	      "experimentalDecorators": true,
-	      "jsx": "react",
+        "experimentalDecorators": true,
+        "jsx": "react",
         "outDir": "./out"
     },
     "include": [
@@ -19,6 +19,6 @@
         "./src/shared/**/*"
     ],
     "exclude": [
-	      "./node_modules"
+        "./node_modules"
     ]
 }
