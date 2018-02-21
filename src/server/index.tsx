@@ -28,9 +28,9 @@ import {
     Request
 } from '@truesparrow/common-server-js'
 import {
-    // ContentPublicClient,
-    Event
-    // newContentPublicClient
+    ContentPublicClient,
+    Event,
+    newContentPublicClient
 } from '@truesparrow/content-sdk-js'
 import {
     IdentityClient,
@@ -64,8 +64,8 @@ async function main() {
     const internalWebFetcher: WebFetcher = new InternalWebFetcher();
     const identityClient: IdentityClient = newIdentityClient(
         config.ENV, config.ORIGIN, config.IDENTITY_SERVICE_HOST, internalWebFetcher);
-    /* const contentPublicClient: ContentPublicClient = newContentPublicClient(
-     *     config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, internalWebFetcher);*/
+    const contentPublicClient: ContentPublicClient = newContentPublicClient(
+        config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, internalWebFetcher);
 
     const bundles: Bundles = isLocal(config.ENV)
         ? new WebpackDevBundles(theWebpackDevMiddleware(webpack(webpackConfig), {
@@ -79,13 +79,15 @@ async function main() {
 
     console.log('Starting up');
 
-    function serverSideRender(url: string, session: Session, clientInitialState: ClientInitialState): [string, number | null] {
+    function serverSideRender(url: string, subDomain: string, session: Session, clientInitialState: ClientInitialState): [string, number | null] {
         const language = inferLanguage(session);
         const store = createStoreFromInitialState(reducers, clientInitialState);
 
         const clientConfig = {
             env: config.ENV,
             origin: config.ORIGIN,
+            originWithSubDomain: config.ORIGIN_WITH_SUBDOMAIN(subDomain),
+            subDomain: subDomain,
             contentServiceHost: config.CONTENT_SERVICE_HOST,
             rollbarClientToken: config.ROLLBAR_CLIENT_TOKEN,
             session: session,
@@ -128,6 +130,7 @@ async function main() {
 
     app.disable('x-powered-by');
     app.use(newNamespaceMiddleware(namespace))
+    app.set('subdomain offset', config.ORIGIN.split('.').length);
     if (isLocal(config.ENV)) {
         app.use(newLocalCommonServerMiddleware(config.NAME, config.ENV, false));
     } else {
@@ -145,7 +148,7 @@ async function main() {
     // ********************
 
     // An API gateway for the client side code. Needs session to exist in the request.
-    app.use('/real/api-gateway', newApiGatewayRouter(internalWebFetcher));
+    app.use('/real/api-gateway', newApiGatewayRouter(config.ORIGIN, internalWebFetcher));
 
     // Static serving of the client side code assets (index.html, vendor.js etc). No session. Derived
     // from the bundles.
@@ -194,16 +197,35 @@ async function main() {
 
     appRouter.use(newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient));
     appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
+        if (req.subdomains.length != 1) {
+            // Something's going on.
+            throw new Error('We just bail on this for now');
+        }
+
+        const subDomain = req.subdomains[0];
+        let eventIsMissing: boolean = false;
         let event: Event | null = null;
-        console.log(req.hostname);
-        // TODO: here itś a whole differnt thing.
+
+        try {
+            event = await contentPublicClient.withContext(req.sessionToken).getEventBySubDomain(subDomain);
+        } catch (e) {
+            if (e.name == 'EventNotFoundError') {
+                eventIsMissing = true;
+            } else {
+                // Nothing happens here. We'll try again on the client. But we do log the error.
+                req.log.warn(e);
+                req.errorLog.warn(e);
+            }
+        }
 
         const initialState: ClientInitialState = {
+            eventIsMissing: eventIsMissing,
             event: event
         };
 
         const [content, specialStatus] = serverSideRender(
             req.url,
+            subDomain,
             req.session,
             initialState
         );

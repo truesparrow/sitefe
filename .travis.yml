@@ -23,6 +23,7 @@ env:
   - ADDRESS=0.0.0.0
   - PORT=10000
   - ORIGIN=null
+  - ORIGIN_WITH_SUBDOMAIN=http://{0}.localhost:10004
   - IDENTITY_SERVICE_HOST=null
   - CONTENT_SERVICE_HOST=null
   - LOGGLY_TOKEN=null

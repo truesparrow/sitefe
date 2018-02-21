@@ -15,8 +15,7 @@ export enum OpState {
     Preloaded = 1,
     Loading = 2,
     Ready = 3,
-    PartialUpdate = 4,
-    Failed = 5
+    Failed = 4
 }
 
 
@@ -36,12 +35,12 @@ export interface EventLoading {
 export interface EventReady {
     part: StatePart.Event;
     type: OpState.Ready;
-    eventIsDeleted: boolean;
-    event: Event | null;
+    event: Event;
 }
 export interface EventFailed {
     part: StatePart.Event;
     type: OpState.Failed;
+    eventIsMissing: boolean;
     errorMessage: string;
 }
 
@@ -79,6 +78,15 @@ export const reducers: Reducer<any> = combineReducers({
 
 export function createStoreFromInitialState(reducers: Reducer<any>, clientInitialState: ClientInitialState): Store<any> {
     const store = createStore(reducers);
+
+    if (clientInitialState.eventIsMissing) {
+        store.dispatch({
+            part: StatePart.Event,
+            type: OpState.Failed,
+            eventIsMissing: true,
+            errorMessage: 'Event is missing'
+        });
+    }
 
     if (clientInitialState.event != null) {
         store.dispatch({
