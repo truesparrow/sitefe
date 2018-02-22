@@ -199,7 +199,7 @@ async function main() {
     appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
         if (req.subdomains.length != 1) {
             // Something's going on.
-            throw new Error('We just bail on this for now');
+            throw new Error('Nothing to see here');
         }
 
         const subDomain = req.subdomains[0];
