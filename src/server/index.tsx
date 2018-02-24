@@ -89,6 +89,7 @@ async function main() {
             originWithSubDomain: config.ORIGIN_WITH_SUBDOMAIN(subDomain),
             subDomain: subDomain,
             contentServiceHost: config.CONTENT_SERVICE_HOST,
+            googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
             rollbarClientToken: config.ROLLBAR_CLIENT_TOKEN,
             session: session,
             language: language

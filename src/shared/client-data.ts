@@ -27,6 +27,9 @@ export class ClientConfig {
     @MarshalWith(r.StringMarshaller)
     contentServiceHost: string;
 
+    @MarshalWith(r.StringMarshaller)
+    googleMapsApiKey: string;
+
     @MarshalWith(OptionalOf(r.StringMarshaller))
     rollbarClientToken: string | null;
 

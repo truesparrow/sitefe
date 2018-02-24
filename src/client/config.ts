@@ -18,6 +18,7 @@ export const CONTEXT: Context = Context.Client;
 export const ORIGIN: string = clientConfig.originWithSubDomain;
 export const SUBDOMAIN: string = clientConfig.subDomain;
 export const CONTENT_SERVICE_HOST: string = clientConfig.contentServiceHost;
+export const GOOGLE_MAPS_API_KEY: string = clientConfig.googleMapsApiKey;
 export const ROLLBAR_CLIENT_TOKEN: string | null = clientConfig.rollbarClientToken;
 export const SESSION: () => Session = () => clientConfig.session;
 export const LANG: () => string = () => clientConfig.language;

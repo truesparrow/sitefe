@@ -28,6 +28,7 @@ env:
   - CONTENT_SERVICE_HOST=null
   - LOGGLY_TOKEN=null
   - LOGGLY_SUBDOMAIN=null
+  - GOOGLE_MAPS_API_KEY=null
   - ROLLBAR_SERVER_TOKEN=null
   - ROLLBAR_CLIENT_TOKEN=null
   - GEMFURY_USER=truesparrow
