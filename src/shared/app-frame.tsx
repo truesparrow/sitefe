@@ -90,7 +90,7 @@ class _AppFrame extends React.Component<Props, State> {
                         <NavLink
                             key={subEvent.slug}
                             to={`/${subEvent.slug}`} exact>
-                            {subEvent.slug}
+                            {subEvent.title[config.LANG()]}
                         </NavLink>
                     );
                 });
