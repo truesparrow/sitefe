@@ -1,0 +1,77 @@
+@import './common.less';
+
+.app-frame {
+    position: relative;
+
+    .app-frame-carousel {
+        position: relative;
+        overflow-x: hidden;
+        width: 100%;
+        height: 100vh;
+
+        .app-frame-carousel-image {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            left: 0rem;
+            top: 0rem;
+            object-fit: cover;
+            display: none;
+
+            &.slideout {
+                display: block;
+
+                // Needs to be in sync with .slideout and timer interval
+                animation-duration: 3s;
+                animation-name: app-frame-carousel-slideout;
+                animation-iteration-count: 1;
+                animation-timing-function: cubic-bezier(0.645,0.045,0.355,1);
+            }
+
+            &.slidein {
+                display: block;
+
+                // Needs to be in sync with .slidein and timer interval
+                animation-duration: 3s;
+                animation-name: app-frame-carousel-slidein;
+                animation-iteration-count: 1;
+                animation-timing-function: cubic-bezier(0.645,0.045,0.355,1);
+            }
+
+            @keyframes app-frame-carousel-slideout {
+                0% {
+                    margin-left: 0%;
+                }
+
+                55% {
+                    margin-left: 0%;
+                }
+
+                100% {
+                    margin-left: -100%;
+                }
+            }
+
+            @keyframes app-frame-carousel-slidein {
+                0% {
+                    margin-left: 100%;
+                }
+
+                55% {
+                    margin-left: 100%;
+                }
+
+                100% {
+                    margin-left: 0%;
+                }
+            }
+        }
+    }
+
+    .app-frame-content {
+        position: absolute;
+        z-index: 100;
+        right: 0px;
+        top: 0px;
+    }
+}

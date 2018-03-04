@@ -19,20 +19,9 @@ interface State {
 
 class _HomePage extends React.Component<Props, State> {
     render() {
-        const { event } = this.props;
-
-        const pictures = event.pictureSet.pictures.map(picture => {
-            return (
-                <div key={picture.position}>
-                    <img src={picture.mainImage.uri} width={picture.mainImage.width} height={picture.mainImage.height} />
-                </div>
-            );
-        });
-
         return (
             <div>
                 {text.homePage[config.LANG()]}
-                {pictures}
             </div>
         );
     }

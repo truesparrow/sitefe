@@ -32,13 +32,38 @@ export interface Props {
 }
 
 export interface State {
+    carouselPreviousImage: number;
+    carouselCurrentImage: number;
 }
 
 class _AppFrame extends React.Component<Props, State> {
+    // Needs to be in sync with .slidein and .slideout stiles.
+    private static readonly _CAROUSEL_INTERVAL_MS = 3000;
+
+    private _carouselTimerId: number;
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            carouselPreviousImage: 0,
+            carouselCurrentImage: props.isPreloaded || props.isReady ? (props.event as Event).pictureSet.pictures.length - 1 : -1
+        };
+        this._carouselTimerId = 0;
+    }
+
     async componentDidMount() {
         // If it's preloaded or already failed and missing at the mount point then the server did
         // all the work.
         if (this.props.isPreloaded || this.props.isFailedAndMissing) {
+            const __this = this;
+
+            this._carouselTimerId = window.setInterval(() => {
+                const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
+                this.setState({
+                    carouselPreviousImage: this.state.carouselCurrentImage,
+                    carouselCurrentImage: newCarouselCurrentImage
+                });
+            }, _AppFrame._CAROUSEL_INTERVAL_MS);
             return;
         }
 
@@ -47,6 +72,16 @@ class _AppFrame extends React.Component<Props, State> {
         try {
             const event = await services.CONTENT_PUBLIC_CLIENT().getEventBySubDomain(config.SUBDOMAIN);
             this.props.onEventReady(event);
+
+            const __this = this;
+
+            this._carouselTimerId = window.setInterval(() => {
+                const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
+                this.setState({
+                    carouselPreviousImage: this.state.carouselCurrentImage,
+                    carouselCurrentImage: newCarouselCurrentImage
+                });
+            }, _AppFrame._CAROUSEL_INTERVAL_MS);
         } catch (e) {
             if (e.name == 'EventNotFoundError') {
                 this.props.onEventFailedAndMissing();
@@ -55,6 +90,12 @@ class _AppFrame extends React.Component<Props, State> {
                 services.ROLLBAR_CLIENT().error(e);
                 this.props.onEventFailed('Could not load event for user');
             }
+        }
+    }
+
+    componentWillUnmount() {
+        if (this._carouselTimerId > 0) {
+            window.clearInterval(this._carouselTimerId);
         }
     }
 
@@ -83,6 +124,21 @@ class _AppFrame extends React.Component<Props, State> {
         } else {
             const event = this.props.event as Event;
 
+            const pictures = event.pictureSet.pictures.map(picture => {
+                const extraClass =
+                    (picture.position == this.state.carouselCurrentImage + 1) ? 'slidein' :
+                        (picture.position == this.state.carouselPreviousImage + 1) ? 'slideout' : '';
+
+                return (
+                    <img
+                        key={picture.position}
+                        className={'app-frame-carousel-image ' + extraClass}
+                        src={picture.mainImage.uri}
+                        width={picture.mainImage.width}
+                        height={picture.mainImage.height} />
+                );
+            });
+
             const subEventNavLinks = event.subEventDetails
                 .filter(subEvent => subEvent.haveEvent)
                 .map(subEvent => {
@@ -108,18 +164,23 @@ class _AppFrame extends React.Component<Props, State> {
                 });
 
             return (
-                <div>
-                    <header>
-                        <NavLink to="/" exact>{text.home[config.LANG()]}</NavLink>
-                        {subEventNavLinks}
-                    </header>
-                    <main>
-                        <Switch>
-                            <Route exact path="/" component={HomePage} />
-                            {subRoutes}
-                            <Route path="*" component={NotFoundPage} />
-                        </Switch>
-                    </main>
+                <div className="app-frame">
+                    <div className="app-frame-carousel">
+                        {pictures}
+                    </div>
+                    <div className="app-frame-content">
+                        <header>
+                            <NavLink to="/" exact>{text.home[config.LANG()]}</NavLink>
+                            {subEventNavLinks}
+                        </header>
+                        <main>
+                            <Switch>
+                                <Route exact path="/" component={HomePage} />
+                                {subRoutes}
+                                <Route path="*" component={NotFoundPage} />
+                            </Switch>
+                        </main>
+                    </div>
                 </div>
             );
         }
