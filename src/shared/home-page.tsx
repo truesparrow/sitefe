@@ -29,7 +29,11 @@ class _HomePage extends React.Component<Props, State> {
                     <NavLink
                         key={subEvent.slug}
                         className="home-page-link"
+                        style={{
+                            'background-color': subEvent.display.color
+                        }}
                         to={`/${subEvent.slug}`} exact>
+                        <span className={'home-page-link-glyph ' + subEvent.display.icon}></span>
                         <strong className="home-page-link-title">
                             {subEvent.title[config.LANG()]}
                         </strong>

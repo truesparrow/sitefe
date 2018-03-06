@@ -5,18 +5,52 @@
     flex-direction:  row;
 
     .home-page-link {
+
         width: 10rem;
         height: 10rem;
+        @media all and (max-width: 800px) {
+            width: 5rem;
+            height: 5rem;
+        }
         display: flex;
         flex-direction: column;
         justify-content: center;
-        background-color: #669;
+        align-items: center;
         text-decoration: none;
         text-align: center;
 
-        .home-page-link-title {
-            color: #fff;
+        .home-page-link-glyph {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+            @media all and (max-width: 800px) {
+                width: 2rem;
+                height: 2rem;
+                margin-bottom: 0rem;
+            }
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-size: cover;
 
+            &.civil-ceremony {
+                background-image: url('./static/link-civil-ceremony.svg');
+            }
+
+            &.religious-ceremony {
+                background-image: url('./static/link-religious-ceremony.svg');
+            }
+
+            &.reception {
+                background-image: url('./static/link-reception.svg');
+            }
+        }
+
+        .home-page-link-title {
+            @media all and (max-width: 800px) {
+                display: none;
+            }
+
+            color: #fff;
             font: 300 20px/20px Open Sans, Arial, Helvetica, sans-serif;
             text-transform: uppercase;
         }
