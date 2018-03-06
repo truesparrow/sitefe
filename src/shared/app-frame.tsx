@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NavLink, Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 
@@ -55,15 +55,7 @@ class _AppFrame extends React.Component<Props, State> {
         // If it's preloaded or already failed and missing at the mount point then the server did
         // all the work.
         if (this.props.isPreloaded || this.props.isFailedAndMissing) {
-            const __this = this;
-
-            this._carouselTimerId = window.setInterval(() => {
-                const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
-                this.setState({
-                    carouselPreviousImage: this.state.carouselCurrentImage,
-                    carouselCurrentImage: newCarouselCurrentImage
-                });
-            }, _AppFrame._CAROUSEL_INTERVAL_MS);
+            this._setupCarouselTimer();
             return;
         }
 
@@ -72,16 +64,7 @@ class _AppFrame extends React.Component<Props, State> {
         try {
             const event = await services.CONTENT_PUBLIC_CLIENT().getEventBySubDomain(config.SUBDOMAIN);
             this.props.onEventReady(event);
-
-            const __this = this;
-
-            this._carouselTimerId = window.setInterval(() => {
-                const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
-                this.setState({
-                    carouselPreviousImage: this.state.carouselCurrentImage,
-                    carouselCurrentImage: newCarouselCurrentImage
-                });
-            }, _AppFrame._CAROUSEL_INTERVAL_MS);
+            this._setupCarouselTimer();
         } catch (e) {
             if (e.name == 'EventNotFoundError') {
                 this.props.onEventFailedAndMissing();
@@ -94,9 +77,7 @@ class _AppFrame extends React.Component<Props, State> {
     }
 
     componentWillUnmount() {
-        if (this._carouselTimerId > 0) {
-            window.clearInterval(this._carouselTimerId);
-        }
+        this._clearCarouselTimer();
     }
 
     render() {
@@ -139,18 +120,6 @@ class _AppFrame extends React.Component<Props, State> {
                 );
             });
 
-            const subEventNavLinks = event.subEventDetails
-                .filter(subEvent => subEvent.haveEvent)
-                .map(subEvent => {
-                    return (
-                        <NavLink
-                            key={subEvent.slug}
-                            to={`/${subEvent.slug}`} exact>
-                            {subEvent.title[config.LANG()]}
-                        </NavLink>
-                    );
-                });
-
             const subRoutes = event.subEventDetails
                 .filter(subEvent => subEvent.haveEvent)
                 .map(subEvent => {
@@ -169,10 +138,6 @@ class _AppFrame extends React.Component<Props, State> {
                         {pictures}
                     </div>
                     <div className="app-frame-content">
-                        <header>
-                            <NavLink to="/" exact>{text.home[config.LANG()]}</NavLink>
-                            {subEventNavLinks}
-                        </header>
                         <main>
                             <Switch>
                                 <Route exact path="/" component={HomePage} />
@@ -183,6 +148,24 @@ class _AppFrame extends React.Component<Props, State> {
                     </div>
                 </div>
             );
+        }
+    }
+
+    private _setupCarouselTimer() {
+        const __this = this;
+
+        this._carouselTimerId = window.setInterval(() => {
+            const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
+            this.setState({
+                carouselPreviousImage: this.state.carouselCurrentImage,
+                carouselCurrentImage: newCarouselCurrentImage
+            });
+        }, _AppFrame._CAROUSEL_INTERVAL_MS);
+    }
+
+    private _clearCarouselTimer() {
+        if (this._carouselTimerId > 0) {
+            window.clearInterval(this._carouselTimerId);
         }
     }
 }

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { Event } from '@truesparrow/content-sdk-js'
@@ -6,7 +7,7 @@ import { Event } from '@truesparrow/content-sdk-js'
 import * as config from './config'
 import { EventState, OpState } from './store'
 
-import * as text from './home-page.text'
+// import * as text from './home-page.text'
 
 
 interface Props {
@@ -19,9 +20,26 @@ interface State {
 
 class _HomePage extends React.Component<Props, State> {
     render() {
+        const { event } = this.props;
+
+        const subEventNavLinks = event.subEventDetails
+            .filter(subEvent => subEvent.haveEvent)
+            .map(subEvent => {
+                return (
+                    <NavLink
+                        key={subEvent.slug}
+                        className="home-page-link"
+                        to={`/${subEvent.slug}`} exact>
+                        <strong className="home-page-link-title">
+                            {subEvent.title[config.LANG()]}
+                        </strong>
+                    </NavLink>
+                );
+            });
+
         return (
-            <div>
-                {text.homePage[config.LANG()]}
+            <div className="home-page">
+                {subEventNavLinks}
             </div>
         );
     }
