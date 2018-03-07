@@ -30,7 +30,7 @@ class _HomePage extends React.Component<Props, State> {
                         key={subEvent.slug}
                         className="home-page-link"
                         style={{
-                            'background-color': subEvent.display.color
+                            backgroundColor: subEvent.display.color
                         }}
                         to={`/${subEvent.slug}`} exact>
                         <span className={'home-page-link-glyph ' + subEvent.display.icon}></span>

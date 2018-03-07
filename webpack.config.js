@@ -86,6 +86,7 @@ module.exports = {
             {from: './src/shared/static/link-civil-ceremony.svg'},
             {from: './src/shared/static/link-religious-ceremony.svg'},
             {from: './src/shared/static/link-reception.svg'},
+            {from: './src/shared/static/icon-close.svg'},
             {from: './out/client/vendor.bundle.js'}
         ]),
         new ExtractTextPlugin('client.css'),

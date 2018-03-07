@@ -137,15 +137,11 @@ class _AppFrame extends React.Component<Props, State> {
                     <div className="app-frame-carousel">
                         {pictures}
                     </div>
-                    <div className="app-frame-content">
-                        <main>
-                            <Switch>
-                                <Route exact path="/" component={HomePage} />
-                                {subRoutes}
-                                <Route path="*" component={NotFoundPage} />
-                            </Switch>
-                        </main>
-                    </div>
+                    <Switch>
+                        <Route exact path="/" component={HomePage} />
+                        {subRoutes}
+                        <Route path="*" component={NotFoundPage} />
+                    </Switch>
                 </div>
             );
         }

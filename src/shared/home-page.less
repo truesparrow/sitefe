@@ -1,8 +1,14 @@
+@import './common.less';
+
+
 .home-page {
     position: relative;
-    top: 50vh;
     display: flex;
     flex-direction:  row;
+    position: absolute;
+    z-index: 100;
+    top: 50vh;
+    right: 0px;
 
     .home-page-link {
 
@@ -32,17 +38,7 @@
             background-repeat: no-repeat;
             background-size: cover;
 
-            &.civil-ceremony {
-                background-image: url('./static/link-civil-ceremony.svg');
-            }
-
-            &.religious-ceremony {
-                background-image: url('./static/link-religious-ceremony.svg');
-            }
-
-            &.reception {
-                background-image: url('./static/link-reception.svg');
-            }
+            .subevent-glyphs();
         }
 
         .home-page-link-title {
