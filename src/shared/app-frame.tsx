@@ -16,6 +16,85 @@ import { EventState, OpState, StatePart } from './store'
 import * as text from './app-frame.text'
 
 
+interface AppFrameCarouselProps {
+    event: Event;
+}
+
+export interface AppFrameCarouselState {
+    carouselPreviousImage: number;
+    carouselCurrentImage: number;
+}
+
+
+class AppFrameCarousel extends React.Component<AppFrameCarouselProps, AppFrameCarouselState> {
+    // Needs to be in sync with .slidein and .slideout stiles.
+    private static readonly _CAROUSEL_INTERVAL_MS = 3000;
+
+    private _carouselTimerId: number;
+
+    constructor(props: AppFrameCarouselProps) {
+        super(props);
+        this.state = {
+            carouselPreviousImage: 0,
+            carouselCurrentImage: props.event.pictureSet.pictures.length - 1
+        };
+        this._carouselTimerId = 0;
+    }
+
+    componentDidMount() {
+        this._setupCarouselTimer();
+    }
+
+    componentWillUnmount() {
+        this._clearCarouselTimer();
+    }
+
+    render() {
+        const event = this.props.event as Event;
+
+        const pictures = event.pictureSet.pictures.map(picture => {
+            const extraClass =
+                (picture.position == this.state.carouselCurrentImage + 1) ? 'slidein' :
+                (picture.position == this.state.carouselPreviousImage + 1) ? 'slideout' : '';
+
+            return (
+                <img
+                    key={picture.position}
+                    className={'app-frame-carousel-image ' + extraClass}
+                    src={picture.mainImage.uri}
+                    width={picture.mainImage.width}
+                    height={picture.mainImage.height} />
+            );
+        });
+
+
+        return (
+            <div className="app-frame-carousel">
+                {pictures}
+            </div>
+        );
+    }
+
+    private _setupCarouselTimer() {
+        const __this = this;
+
+        this._carouselTimerId = window.setInterval(() => {
+            const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
+            this.setState({
+                carouselPreviousImage: this.state.carouselCurrentImage,
+                carouselCurrentImage: newCarouselCurrentImage
+            });
+        }, AppFrameCarousel._CAROUSEL_INTERVAL_MS);
+    }
+
+    private _clearCarouselTimer() {
+        if (this._carouselTimerId > 0) {
+            window.clearInterval(this._carouselTimerId);
+        }
+    }
+}
+
+
 export interface Props {
     location: Location;
     isPreloaded: boolean;
@@ -31,31 +110,11 @@ export interface Props {
     onEventFailed: (errorMessage: string) => void;
 }
 
-export interface State {
-    carouselPreviousImage: number;
-    carouselCurrentImage: number;
-}
-
-class _AppFrame extends React.Component<Props, State> {
-    // Needs to be in sync with .slidein and .slideout stiles.
-    private static readonly _CAROUSEL_INTERVAL_MS = 3000;
-
-    private _carouselTimerId: number;
-
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            carouselPreviousImage: 0,
-            carouselCurrentImage: props.isPreloaded || props.isReady ? (props.event as Event).pictureSet.pictures.length - 1 : -1
-        };
-        this._carouselTimerId = 0;
-    }
-
+class _AppFrame extends React.Component<Props, {}> {
     async componentDidMount() {
         // If it's preloaded or already failed and missing at the mount point then the server did
         // all the work.
         if (this.props.isPreloaded || this.props.isFailedAndMissing) {
-            this._setupCarouselTimer();
             return;
         }
 
@@ -64,7 +123,6 @@ class _AppFrame extends React.Component<Props, State> {
         try {
             const event = await services.CONTENT_PUBLIC_CLIENT().getEventBySubDomain(config.SUBDOMAIN);
             this.props.onEventReady(event);
-            this._setupCarouselTimer();
         } catch (e) {
             if (e.name == 'EventNotFoundError') {
                 this.props.onEventFailedAndMissing();
@@ -74,10 +132,6 @@ class _AppFrame extends React.Component<Props, State> {
                 this.props.onEventFailed('Could not load event for user');
             }
         }
-    }
-
-    componentWillUnmount() {
-        this._clearCarouselTimer();
     }
 
     render() {
@@ -105,21 +159,6 @@ class _AppFrame extends React.Component<Props, State> {
         } else {
             const event = this.props.event as Event;
 
-            const pictures = event.pictureSet.pictures.map(picture => {
-                const extraClass =
-                    (picture.position == this.state.carouselCurrentImage + 1) ? 'slidein' :
-                        (picture.position == this.state.carouselPreviousImage + 1) ? 'slideout' : '';
-
-                return (
-                    <img
-                        key={picture.position}
-                        className={'app-frame-carousel-image ' + extraClass}
-                        src={picture.mainImage.uri}
-                        width={picture.mainImage.width}
-                        height={picture.mainImage.height} />
-                );
-            });
-
             const subRoutes = event.subEventDetails
                 .filter(subEvent => subEvent.haveEvent)
                 .map(subEvent => {
@@ -134,9 +173,7 @@ class _AppFrame extends React.Component<Props, State> {
 
             return (
                 <div className="app-frame">
-                    <div className="app-frame-carousel">
-                        {pictures}
-                    </div>
+                    <AppFrameCarousel event={event} />
                     <Switch>
                         <Route exact path="/" component={HomePage} />
                         {subRoutes}
@@ -144,24 +181,6 @@ class _AppFrame extends React.Component<Props, State> {
                     </Switch>
                 </div>
             );
-        }
-    }
-
-    private _setupCarouselTimer() {
-        const __this = this;
-
-        this._carouselTimerId = window.setInterval(() => {
-            const newCarouselCurrentImage = (this.state.carouselCurrentImage + 1) % (__this as any).props.event.pictureSet.pictures.length;
-            this.setState({
-                carouselPreviousImage: this.state.carouselCurrentImage,
-                carouselCurrentImage: newCarouselCurrentImage
-            });
-        }, _AppFrame._CAROUSEL_INTERVAL_MS);
-    }
-
-    private _clearCarouselTimer() {
-        if (this._carouselTimerId > 0) {
-            window.clearInterval(this._carouselTimerId);
         }
     }
 }
