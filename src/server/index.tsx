@@ -18,6 +18,7 @@ import * as serializeJavascript from 'serialize-javascript'
 import { inferLanguage } from '@truesparrow/business-rules-js'
 import {
     InternalWebFetcher,
+    isForDevelopment,
     isLocal,
     WebFetcher
 } from '@truesparrow/common-js'
@@ -198,12 +199,23 @@ async function main() {
 
     appRouter.use(newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient));
     appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
-        if (req.subdomains.length != 1) {
-            // Something's going on.
-            throw new Error('Nothing to see here');
+        console.log(req.cookies);
+        if (isForDevelopment(config.ENV)) {
+            if (req.subdomains.length != 1 && !req.cookies.hasOwnProperty('truesparrow-subdomain')) {
+                throw new Error('Nothing to see here');
+            }
+        } else {
+            if (req.subdomains.length != 1) {
+                throw new Error('Nothing to see here');
+            }
         }
 
-        const subDomain = req.subdomains[0];
+        const subDomain =
+            isForDevelopment(config.ENV)
+                ? (req.subdomains.length == 1
+                    ? req.subdomains[0]
+                    : req.cookies['truesparrow-subdomain'])
+                : req.subdomains[0];
         let eventIsMissing: boolean = false;
         let event: Event | null = null;
 
