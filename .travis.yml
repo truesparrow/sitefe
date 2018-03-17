@@ -22,19 +22,21 @@ addons:
 env:
   global:
   #* Application *#
-  - ENV=TEST
-  - CONTEXT=SERVER
-  - ADDRESS=0.0.0.0
-  - PORT=10000
-  - ORIGIN=null
-  - ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.local.truesparrow:10004
-  - IDENTITY_SERVICE_HOST=null
-  - CONTENT_SERVICE_HOST=null
-  - LOGGLY_TOKEN=null
-  - LOGGLY_SUBDOMAIN=null
-  - GOOGLE_MAPS_API_KEY=null
-  - ROLLBAR_SERVER_TOKEN=null
-  - ROLLBAR_CLIENT_TOKEN=null
+  #** Common to all services **#
+  - COMMON_ENV=TEST
+  - COMMON_CONTEXT=SERVER
+  - COMMON_IDENTITY_SERVICE_HOST=null
+  - COMMON_CONTENT_SERVICE_HOST=null
+  - COMMON_LOGGLY_TOKEN=null
+  - COMMON_LOGGLY_SUBDOMAIN=null
+  - COMMON_GOOGLE_MAPS_API_KEY=null
+  - COMMON_ROLLBAR_SERVER_TOKEN=null
+  - COMMON_ROLLBAR_CLIENT_TOKEN=null
+  #** Specific to sitfe service **#
+  - SITEFE_ADDRESS=0.0.0.0
+  - SITEFE_PORT=10000
+  - SITEFE_ORIGIN=null
+  - SITEFE_ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.local.truesparrow:10004
   #* Travis build *#
   - GEMFURY_USER=truesparrow
   # GEMFURY_API_KEY=???
