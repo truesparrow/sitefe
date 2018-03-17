@@ -15,15 +15,19 @@ services:
 
 addons:
   postgresql: "9.6"
+  hosts:
+    - identity.local.truesparrow
+    - content.local.truesparrow
 
 env:
   global:
+  #* Application *#
   - ENV=TEST
   - CONTEXT=SERVER
   - ADDRESS=0.0.0.0
   - PORT=10000
   - ORIGIN=null
-  - ORIGIN_WITH_SUBDOMAIN=http://{0}.localhost:10004
+  - ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.local.truesparrow:10004
   - IDENTITY_SERVICE_HOST=null
   - CONTENT_SERVICE_HOST=null
   - LOGGLY_TOKEN=null
@@ -31,6 +35,7 @@ env:
   - GOOGLE_MAPS_API_KEY=null
   - ROLLBAR_SERVER_TOKEN=null
   - ROLLBAR_CLIENT_TOKEN=null
+  #* Travis build *#
   - GEMFURY_USER=truesparrow
   # GEMFURY_API_KEY=???
   - secure: "uEiaceH4szs6OKdnrW2Of00TCCn1RRIlViFVLNGgo70az5JqmFh0YZwU7lI3XYIRF/cI970HXIWwB6ITMUwUoBbYxx5jNhlZoDq5gD3jdywQBz97g3vHwYjk5Zg3Tr5yr50PZNuYljWzIAomGmVn3so4XbNPSCyPBjWgomAC6ePcy6lg1qRHxyXVw8mV5nyutMHNj/RNRbDGjfkO+Dq3SuaGtdEoVSq1lG3GykjbwBY0jc5orIIOiTiZi6pAFOCgbpnYn/30VqlRUlcDt7c7TXEhazCuTJocMj3XqvB449IH2m929USMJGqDXv6/HMPklUiMVYnp51t28HBLsO0U8EggVvXJUeg95zCPAplhmeMWs0cruhiHQQHS89NwzoPAKFH6qZYvolZlSlvW5radYJh1+EvQ7lPupI1f3ZDZHlM/1yRmvvCb1ng6Jn7ciFcG3Ei/a+0LY+ouTDt1zhvUsp+2d+3elPQFBeWIWDVgSIgEKgSdhlMEw9P5YsZxxRIX1gn8U+LDjGvA7/I47yZqm9jdpXU3UbWlsLMN6qG6lPModt1ti7Vk4O5A4mnYq7KrJeWJSXkBzzMQCi0a7RcSzMAYBmC3RIouLGGJiFNvmIzV0QXCDZWUVbyJPzkbdm2XU6B1k+C0Q0UKvYWnq824JXumkqB+Ur2LbbfpxK6caLw="
