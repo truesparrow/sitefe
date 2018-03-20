@@ -42,7 +42,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[0];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', ORIGIN);
+                    cy.url().should('eql', ORIGIN + '/');
                 });
             });
         });
@@ -80,7 +80,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[1];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', ORIGIN);
+                    cy.url().should('eql', ORIGIN + '/');
                 });
             });
         });
@@ -118,7 +118,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[2];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', ORIGIN);
+                    cy.url().should('eql', ORIGIN + '/');
                 });
             });
         });
