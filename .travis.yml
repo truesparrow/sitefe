@@ -45,7 +45,7 @@ env:
   - IDENTITY_ADDRESS=0.0.0.0
   - IDENTITY_PORT=10001
   - IDENTITY_ORIGIN=http://identity.test.truesparrow:10001
-  - IDENTITY_CLIENTS=http://content.test.truesparrow:10002,http://adminfe.test.truesparrow:10003
+  - IDENTITY_CLIENTS=http://content.test.truesparrow:10002,http://sitefe.test.truesparrow:10004
   - IDENTITY_DATABASE_HOST=postgres.test.truesparrow
   - IDENTITY_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
   - IDENTITY_DATABASE_MIGRATIONS_DIR=./migrations
@@ -59,7 +59,7 @@ env:
   - CONTENT_ADDRESS=0.0.0.0
   - CONTENT_PORT=10002
   - CONTENT_ORIGIN=http://content.test.truesparrow:10002
-  - CONTENT_CLIENTS=http://adminfe.test.truesparrow:10003
+  - CONTENT_CLIENTS=http://sitefe.test.truesparrow:10004
   - CONTENT_DATABASE_HOST=postgres.test.truesparrow
   - CONTENT_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
   - CONTENT_DATABASE_MIGRATIONS_DIR=./migrations
