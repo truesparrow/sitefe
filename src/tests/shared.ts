@@ -1,0 +1,8 @@
+export const IDENTITY_SERVICE_HOST = Cypress.env('COMMON_IDENTITY_SERVICE_HOST');
+export const CONTENT_SERVICE_HOST = Cypress.env('COMMON_CONTENT_SERVICE_HOST');
+
+export const ADMINFE_EXTERNAL_DOMAIN = Cypress.env('COMMON_ADMINFE_EXTERNAL_DOMAIN');
+export const ORIGIN_DOMAIN = Cypress.env('SITEFE_ORIGIN_DOMAIN');
+export const ORIGIN = Cypress.env('SITEFE_ORIGIN');
+export const ORIGIN_PORT = Cypress.env('SITEFE_PORT');
+export const ORIGIN_DOMAIN_AND_PORT = `${ORIGIN_DOMAIN}:${ORIGIN_PORT}`;

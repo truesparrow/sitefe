@@ -20,6 +20,7 @@ import {
     InternalWebFetcher,
     isForDevelopment,
     isLocal,
+    isNotOnServer,
     WebFetcher
 } from '@truesparrow/common-js'
 import {
@@ -133,7 +134,7 @@ async function main() {
     app.disable('x-powered-by');
     app.use(newNamespaceMiddleware(namespace))
     app.set('subdomain offset', config.ORIGIN.split('.').length);
-    if (isLocal(config.ENV)) {
+    if (isNotOnServer(config.ENV)) {
         app.use(newLocalCommonServerMiddleware(config.NAME, config.ENV, false));
     } else {
         app.use(newCommonServerMiddleware(
@@ -199,7 +200,6 @@ async function main() {
 
     appRouter.use(newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient));
     appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
-        console.log(req.cookies);
         if (isForDevelopment(config.ENV)) {
             if (req.subdomains.length != 1 && !req.cookies.hasOwnProperty('truesparrow-subdomain')) {
                 throw new Error('Nothing to see here');

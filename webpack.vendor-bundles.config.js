@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const prodPlugins = require('./webpack.prod-plugins');
+// const prodPlugins = require('./webpack.prod-plugins');
 
 module.exports = {
     target: 'web',
@@ -19,5 +19,5 @@ module.exports = {
             path: path.resolve(__dirname, 'out', 'client', '[name]-manifest.json'),
             name: '[name]_lib'
         })
-    ].concat(process.env.COMMON_ENV !== 'LOCAL' ? prodPlugins.prodPlugins : [])
+    ].concat(process.env.COMMON_ENV !== 'LOCAL' ? [] /* TODO: fix this prodPlugins.prodPlugins */ : [])
 };

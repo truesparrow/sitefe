@@ -1,0 +1,30 @@
+version: '2'
+services:
+  postgres:
+    container_name: truesparrow.e2e-tests.postgres
+    image: postgres
+    ports:
+     - 10000:5432
+    environment:
+     - POSTGRES_USER=truesparrow
+     - POSTGRES_PASSWORD=truesparrow
+     - POSTGRES_DB=truesparrow
+  identity:
+    container_name: truesparrow.e2e-tests.identity
+    image: eu.gcr.io/chmsqrt2-truesparrow-common/identity:latest
+    ports:
+     - 10001:10001
+    env_file:
+     - ./.env
+    links:
+     - "postgres:${IDENTITY_DATABASE_HOST}"
+  content:
+    container_name: truesparrow.e2e-tests.content
+    image: eu.gcr.io/chmsqrt2-truesparrow-common/content:latest
+    ports:
+     - 10002:10002
+    env_file:
+     - ./.env
+    links:
+     - "postgres:${CONTENT_DATABASE_HOST}"
+     - "identity:${COMMON_IDENTITY_HOST}"

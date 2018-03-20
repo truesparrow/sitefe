@@ -10,14 +10,14 @@ cache:
     - node_modules
 
 services:
-  - postgresql
   - docker
 
 addons:
-  postgresql: "9.6"
   hosts:
-    - identity.local.truesparrow
-    - content.local.truesparrow
+    - postgres.test.truesparrow
+    - identity.test.truesparrow
+    - content.test.truesparrow
+    - sitefe.test.truesparrow
 
 env:
   global:
@@ -25,32 +25,71 @@ env:
   #** Common to all services **#
   - COMMON_ENV=TEST
   - COMMON_CONTEXT=SERVER
-  - COMMON_IDENTITY_SERVICE_HOST=null
-  - COMMON_CONTENT_SERVICE_HOST=null
+  - COMMON_IDENTITY_HOST=identity.test.truesparrow
+  - COMMON_IDENTITY_SERVICE_HOST=identity.test.truesparrow:10001
+  - COMMON_CONTENT_SERVICE_HOST=content.test.truesparrow:10002
+  - COMMON_ADMINFE_EXTERNAL_DOMAIN=adminfe.test.truesparrow
+  # COMMON_GOOGLE_MAPS_API_KEY=null
+  - secure: "bYX2nRXSLQB8gJsfGAw5Pl0Drhdur1tr9IQ8ACtqHPy2yZAIP5kIvwAjsr/wz4Q8tTKbDh2xw2I3BgfOKQEgVrLywenPceUXLgYv6VCh6pYN04nrVkZ2F/ghm/9lCZWkZPE7lUh6s0qRI4Xbc5d9KbS3YIBcsr86GkW3JsUDH37ape6A9H6HpffJR9PAJaR9xveauIlATi4vZ+Ykn20LiOXpmVZI1yYQOwSjtnudiE8gQpw4WkcUYsFxIxe7BmNjEBSs8/phq4UIP0PZB6bPKCnf+x/sUB9lrOLISyolu7R/ZqvJJP/WdxgQzE87mUchYgFssbe/15jMF5NJcbYQceRGzMjjQLT2ivTdN/Ud6/U1rTy9JQnpMgSb97cEmfLTrBLAiyTO37DNyqw3j8i3uNoLY5awECDwoyvkxKgB0IvAS4IYcV7SLigGR/Ym/8GzZNOSRoGHp6m6TdxTiqq2xgopnnJgdEyLoWLekcxjnUCeBPgpDTgLUUiQhdCbbI2cHR3lfbgVbiseo/F0RsIMMe4NMd7QHhEEe3CGkoHVQGwba1xcr3qkPDxgZFKTGkdQzkg0bGzOJBrVmpI36zxff+fePSUVWASe4y2WBFkaEG70Zs91e1MKVaNJTMssfx4xT4NREb6OmafgCxbJMLo/WlHCoTVMLaTzOuaos0yqHTA="
   - COMMON_LOGGLY_TOKEN=null
   - COMMON_LOGGLY_SUBDOMAIN=null
-  - COMMON_GOOGLE_MAPS_API_KEY=null
   - COMMON_ROLLBAR_SERVER_TOKEN=null
   - COMMON_ROLLBAR_CLIENT_TOKEN=null
   #** Specific to sitfe service **#
   - SITEFE_ADDRESS=0.0.0.0
-  - SITEFE_PORT=10000
-  - SITEFE_ORIGIN=null
-  - SITEFE_ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.local.truesparrow:10004
+  - SITEFE_PORT=10004
+  - SITEFE_ORIGIN_DOMAIN=sitefe.test.truesparrow
+  - SITEFE_ORIGIN=http://sitefe.test.truesparrow:10004
+  - SITEFE_ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.test.truesparrow:10004
+  #** Specific to identity service **#
+  - IDENTITY_ADDRESS=0.0.0.0
+  - IDENTITY_PORT=10001
+  - IDENTITY_ORIGIN=http://identity.test.truesparrow:10001
+  - IDENTITY_CLIENTS=http://content.test.truesparrow:10002,http://adminfe.test.truesparrow:10003
+  - IDENTITY_DATABASE_HOST=postgres.test.truesparrow
+  - IDENTITY_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
+  - IDENTITY_DATABASE_MIGRATIONS_DIR=./migrations
+  - IDENTITY_DATABASE_MIGRATIONS_TABLE=migrations_identity
+  # IDENTITY_AUTH0_CLIENT_ID=null
+  - secure: "dshzqiM0jOFt43n2fP6J/Vd94FVTMvKqrRopvyG3p0lhoM20KNWNAYKawAmDSXfLPx8TWgkXjPotyV+I+7LVgrtX+9BzVE7YPLbA5FeT8VHM1MfptdPn8wHeO6Mxzuxb5faxak7S/m79yTDuoyb4eyZbVXdC4Pf5c7nvWMRZNpnnhaEE8HP1Vf5GQn3hf+P2ABXoT4jA7GePs4nAt3xXYX/yuUBkCyO5qnq8u3B7cxmCoy2YgyyaxoZCdpkLafXDclmm2RU48APE2ndiQPkvvH4ND37GS28rX9DYcIuPNg8o3pBLajcap0hHP01PAhAl0+Hy9ot0FgdeWCPiVVEzMkipuEfr0fJyKhzy9GPVTgu7oXvVJGKEB8ZG5QUlp3Kmju3FgHEshpNCZMS/My6mnfbzNocpsOLFkCAmCe6Z9ftkHtfCq2s4/JwcyF6OqUsv/hDetfgSYRXp5U/bSuJb1VsnzTjoriUrhl6F2fM3wOi+qlbkYOjilp7qTtadRqMOckAlc1ICqaiQ5UUTkPIOiSOctU28mVINgfdBuHg7V5TVfAuVzY3S6E2WBfJAFqpyKsbiyHEpADJU+HAN26gaw6jxLlCBYoDyE6FTUdGzsakIyDAXpDCog355sJpkGzQg0UWQ9l5iHb8R/e5Vq9vUrfFU7MstDaBN8gxjSdkBcYA="
+  # IDENTITY_AUTH0_CLIENT_SECRET=null
+  - secure: "YUSbVrFeIYQ6ypJ+NHPeGwlKQqPjtrKFMTqTB/uhuKRUReZ+OBFqaT1p3fPLeqwdsjZBFwBbwazfI/c9iAJX0lUZYtted51QpcloYOyQsQAfh+NG5oU2o64smINTd+55jGKhrJyedfBFkyoEj6fYFYX3r7V/SRAMqInpyn/HRN+76gRbcRjx3rKTpPSMDIrFm8KSR7NSFvZdNFJVxFblvuzsxd0PK9B7owYCgg1Wi2Rd/QfZk4LeJ2KMPdWxBFRcvYPta8kzPN5FZthK//+4pderuInPoVgAjtDBod1ONa4SL9SsiffhojzzTE5W+HDbuVxUHYP2f67rQIFkSOMe8CQUB+l5ETts/3Osb53ZB3QtiD+H676BCQ/XQ9wd5co3noMV86X84DgVeS5//nkYyRSkcO0yuOaefvqY9xXY6QqWu37952Ei/SiQ+E9Agp9cZDNGX1yPhtFrtUzTI1K69egP5j9GLj45KGA1/ZFJyh0QOglCOom5PjEKB6Emeue/q1zive6/g9w+iW6Zn/t2416sfchfzTiAkjo1VgjXa65q32FkFBsotVQqzyjpv6zPkxsMxPustqx2BOHgpY4rEkeuNr3VyPxvLNpa8agGawQwQ805vErdO69+EMH70Y6f+jujl5Qk/J1J2wKuk9g2qOhHoYNGZesGHSgzPHVJjAA="
+  - IDENTITY_AUTH0_DOMAIN=null
+  #** Specific to content service **#
+  - CONTENT_ADDRESS=0.0.0.0
+  - CONTENT_PORT=10002
+  - CONTENT_ORIGIN=http://content.test.truesparrow:10002
+  - CONTENT_CLIENTS=http://adminfe.test.truesparrow:10003
+  - CONTENT_DATABASE_HOST=postgres.test.truesparrow
+  - CONTENT_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
+  - CONTENT_DATABASE_MIGRATIONS_DIR=./migrations
+  - CONTENT_DATABASE_MIGRATIONS_TABLE=migrations_content
   #* Travis build *#
   - GEMFURY_USER=truesparrow
   # GEMFURY_API_KEY=???
   - secure: "uEiaceH4szs6OKdnrW2Of00TCCn1RRIlViFVLNGgo70az5JqmFh0YZwU7lI3XYIRF/cI970HXIWwB6ITMUwUoBbYxx5jNhlZoDq5gD3jdywQBz97g3vHwYjk5Zg3Tr5yr50PZNuYljWzIAomGmVn3so4XbNPSCyPBjWgomAC6ePcy6lg1qRHxyXVw8mV5nyutMHNj/RNRbDGjfkO+Dq3SuaGtdEoVSq1lG3GykjbwBY0jc5orIIOiTiZi6pAFOCgbpnYn/30VqlRUlcDt7c7TXEhazCuTJocMj3XqvB449IH2m929USMJGqDXv6/HMPklUiMVYnp51t28HBLsO0U8EggVvXJUeg95zCPAplhmeMWs0cruhiHQQHS89NwzoPAKFH6qZYvolZlSlvW5radYJh1+EvQ7lPupI1f3ZDZHlM/1yRmvvCb1ng6Jn7ciFcG3Ei/a+0LY+ouTDt1zhvUsp+2d+3elPQFBeWIWDVgSIgEKgSdhlMEw9P5YsZxxRIX1gn8U+LDjGvA7/I47yZqm9jdpXU3UbWlsLMN6qG6lPModt1ti7Vk4O5A4mnYq7KrJeWJSXkBzzMQCi0a7RcSzMAYBmC3RIouLGGJiFNvmIzV0QXCDZWUVbyJPzkbdm2XU6B1k+C0Q0UKvYWnq824JXumkqB+Ur2LbbfpxK6caLw="
+  - CYPRESS_baseUrl=${SITEFE_ORIGIN}
+  # CYPRESS_RECORD_KEY
+  - secure: "i3Vy9Hl+ezhD4PJn4KpbJU3PYaxAQ7h5KLMEI16BbydSTsyaqFASSb0DZV4CFgcmZ04TExVNfuDGbqwYKR0mAfpg74qR2/cs5F8YyLzL2SueHo9WuFDYSWWjJXfkryFl5BSZzAOTCOdgtXVNhD99QdKiHs3tY9Q66dgIaznZPW9wWm45P/fM7wqzNv8HeZjhqxMqHamHQzdrlH3/t8dp6usDYFZPhMv01Ryi2XkbuNNzPJaJkoAPmbzS40z4cYzK1ELx3XZikrwFlJnnvWuV4vpUezq4jJokz4nT5/rmnYAiHnlQujWn5wosUnfYuRXbqwszevDPlpFv3Ao5PdEUIsQfIyiMU6tH+MNwkD2hD2f3IjEINHo2IZtX0rbvhEYmrspkB+HYUoDdpdzsRxWCetSE/xzWHRBrwykvO5S3yzReD0rPJeaAXTGw4zrvTgpdwNxWoSB6HFYSEVsTTz8p18H3pqZTukIpRZay0YIglSSNykKZUC716AnBzjq7FtjxKVPRVCfi0tAY/vNZ/D8/rs42wE77AHuRxGn6lUbsAgAFDRJ2XmXxtNwJIuPGqR19ud/2yBqV8rUbwZ1s+d96Nk6cKuNI1oqMqSPbtcm012mbjpYUSnu9QyIhZugI5pRie4+5ZYPe/r7cskTjhuslAI7dSQVaEGLed7VpQkWM16M="
 
 install:
 - npm install --registry=https://npm-proxy.fury.io/${GEMFURY_API_KEY}/${GEMFURY_USER}/ --progress=false
 
 before_script:
+- npm run build
 - psql -c 'create database truesparrow;' -U postgres
 - openssl aes-256-cbc -K $encrypted_1bb74946250e_key -iv $encrypted_1bb74946250e_iv -in gcp-ci-docker-pusher-key.json.enc -out gcp-ci-docker-pusher-key.json -d
+- cat gcp-ci-docker-pusher-key.json | docker login --username _json_key --password-stdin https://eu.gcr.io;
+- env > .env
+- docker-compose pull
+- docker-compose up -d
+- npm run serve-prod &
+- sleep 60
+- docker-compose logs
 
 script:
 - npm run test
+- npm run e2e-tests-prod
 
 after_success:
 - npm run push-coverage-to-codecov

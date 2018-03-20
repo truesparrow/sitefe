@@ -1,0 +1,70 @@
+{
+    "title": "My big fat greek wedding",
+    "pictureSet": {
+        "pictures": [
+            {
+                "position": 1,
+                "mainImage": {
+                    "uri": "http://localhost:10004/real/client/couple.jpg",
+                    "format": "jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                "thumbnailImage": {
+                    "uri": "http://localhost:10004/real/client/couple.jpg",
+                    "format": "jpg",
+                    "width": 300,
+                    "height": 170
+                }
+            },
+            {
+                "position": 2,
+                "mainImage": {
+                    "uri": "http://localhost:10004/real/client/ceremony.jpg",
+                    "format": "jpg",
+                    "width": 1600,
+                    "height": 900
+                },
+                "thumbnailImage": {
+                    "uri": "http://localhost:10004/real/client/ceremony.jpg",
+                    "format": "jpg",
+                    "width": 300,
+                    "height": 170
+                }
+            }
+        ]
+    },
+    "subEventDetails": [
+        {
+            "haveEvent": true,
+            "title": [
+                ["en", "Religious Ceremony"],
+                ["ro", "Ceremonia Religioasa"]
+            ],
+            "slug": "religious-ceremony",
+            "address": "Biserica Icoanei, Strada Icoanei, Bucharest, Romania",
+            "coordinates": [9, 0],
+            "dateAndTime": 1520945656721,
+            "display": {
+                "icon": "religious-ceremony",
+                "color": "#FFCC00"
+            }
+        },
+        {
+            "haveEvent": true,
+            "title": [
+                ["en", "Reception"],
+                ["ro", "Petrecerea"]
+            ],
+            "slug": "reception",
+            "address": "Scala Events, Bulevardul Mircea Eliade, Bucharest, Romania",
+            "coordinates": [9, 0],
+            "dateAndTime": 1520945656721,
+            "display": {
+                "icon": "reception",
+                "color": "#FF3333"
+            }
+        }
+    ],
+    "subDomain": "greek-wedding"
+}

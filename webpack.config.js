@@ -3,7 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
-const prodPlugins = require('./webpack.prod-plugins');
+// const prodPlugins = require('./webpack.prod-plugins');
 
 
 module.exports = {
@@ -78,6 +78,10 @@ module.exports = {
             result.request = '../client/config';
         }),
         new CopyPlugin([
+            {from: './src/shared/static/placeholders/avatar.svg'},
+            {from: './src/shared/static/placeholders/ceremony.jpg'},
+            {from: './src/shared/static/placeholders/couple.jpg'},
+            {from: './src/shared/static/placeholders/sparrow.jpg'},
             {from: './src/shared/static/index.html'},
             {from: './src/shared/static/favicon.ico'},
             {from: './src/shared/static/humans.txt'},
@@ -105,7 +109,7 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'manifest'
         })
-    ].concat(process.env.COMMON_ENV !== 'LOCAL' ? prodPlugins.prodPlugins : []),
+    ].concat(process.env.COMMON_ENV !== 'LOCAL' ? [] /* TODO: fix this prodPlugins.prodPlugins */ : []),
     resolve: {
         extensions: ['.js', '.ts', '.tsx', '.css', '.less'],
         modules: [
