@@ -2,7 +2,7 @@ import 'mocha'
 
 import { Env } from '@truesparrow/common-js'
 
-import { ORIGIN_DOMAIN_AND_PORT } from './shared'
+import { ORIGIN_DOMAIN_AND_PORT, ORIGIN } from './shared'
 
 
 describe('Subevent pages', () => {
@@ -42,7 +42,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[0];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', 'http://sitefe.local.truesparrow:10004/');
+                    cy.url().should('eql', ORIGIN);
                 });
             });
         });
@@ -80,7 +80,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[1];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', 'http://sitefe.local.truesparrow:10004/');
+                    cy.url().should('eql', ORIGIN);
                 });
             });
         });
@@ -118,7 +118,7 @@ describe('Subevent pages', () => {
                     const subEvent = event.subEventDetails[2];
                     cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEvent.slug);
                     cy.get('div.subevent-page a.subevent-page-close').click();
-                    cy.url().should('eql', 'http://sitefe.local.truesparrow:10004/');
+                    cy.url().should('eql', ORIGIN);
                 });
             });
         });
