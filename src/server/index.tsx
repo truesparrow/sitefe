@@ -24,7 +24,7 @@ import {
     WebFetcher
 } from '@truesparrow/common-js'
 import {
-    newCommonServerMiddleware,
+    //    newCommonServerMiddleware,
     newHealthCheckRouter,
     newLocalCommonServerMiddleware,
     newNamespaceMiddleware,
@@ -135,15 +135,15 @@ async function main() {
     app.disable('x-powered-by');
     app.use(newNamespaceMiddleware(namespace))
     app.set('subdomain offset', config.ORIGIN.split('.').length);
-    if (isNotOnServer(config.ENV)) {
+    if (true || isNotOnServer(config.ENV)) {
         app.use(newLocalCommonServerMiddleware(config.NAME, config.ENV, false));
     } else {
-        app.use(newCommonServerMiddleware(
-            config.NAME,
-            config.ENV,
-            config.LOGGLY_TOKEN as string,
-            config.LOGGLY_SUBDOMAIN as string,
-            config.ROLLBAR_SERVER_TOKEN as string));
+        // app.use(newCommonServerMiddleware(
+        //     config.NAME,
+        //     config.ENV,
+        //     config.LOGGLY_TOKEN as string,
+        //     config.LOGGLY_SUBDOMAIN as string,
+        //     config.ROLLBAR_SERVER_TOKEN as string));
     }
     app.use(compression({ threshold: 0 }));
 
