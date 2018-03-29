@@ -14,57 +14,13 @@ services:
 
 addons:
   hosts:
-    - postgres.test.truesparrow
-    - identity.test.truesparrow
-    - content.test.truesparrow
-    - sitefe.test.truesparrow
+    - postgres.truesparrow
+    - identity.truesparrow
+    - content.truesparrow
+    - sitefe.truesparrow
 
 env:
   global:
-  #* Application *#
-  #** Common to all services **#
-  - COMMON_ENV=TEST
-  - COMMON_CONTEXT=SERVER
-  - COMMON_IDENTITY_HOST=identity.test.truesparrow
-  - COMMON_IDENTITY_SERVICE_HOST=identity.test.truesparrow:10001
-  - COMMON_CONTENT_SERVICE_HOST=content.test.truesparrow:10002
-  - COMMON_ADMINFE_EXTERNAL_DOMAIN=adminfe.test.truesparrow
-  # COMMON_GOOGLE_MAPS_API_KEY=null
-  - secure: "ecEkCpuBVBru2hbzuA/raWtq7pMi9TYPxj/LFaVkN2t3I6qewTryJ7dzp9dZWqeXbeoOZBBrHk6bUaQW9lnBRhK6MeT0JouCE/9x2gEof7os5Reg1PqYe/2PPTRM9ojqkwxk+bdIxvbkOljNCSgrzMuqRZX32NwHI9pkkf5Q+mEB+Sxxf18D9WaFuu63+ofCZb4ZKKb3AugENAfvoRNDIGjww24nFanuvy1amQ3uTZn2SL+LB3/j5znMMRkHdd4uE3QByIDn/iz7gcEwWOx+eyaZ5nw3MtwjmHfEMLIETe89QwAVbH/fBsMeVfsbtQyJaPfa19gL+yGnsLYZyS0HrMGJi+F80GLVeTQwQNbagJU0P0hYVg3IloZl+IAbUHNLu943gNl/I7uhhHz/styJke8es2/DOywPK5iSvTjFxAvLuczARqI6l5TwzgBfQfrXg6nlN7+BkIyGMI5sVYO97urM66rRNytu6CVSGPFslAOCRyPKQOg6h9X7M9EDdbT54lCMuKHBVgMzHVN9OQgJEKDbOC7cUmJlkzW7XkrxcHk1AdOnao/DQiiM/PtbrR6mrLetu3chjCpPxL8GStr3KrPFFJJ3UB019sbbIrCf1xWnw6444+aLQP/g/7vtzPV43JmfrQmOD1JKh0llcHJ7NjnZAh+O+Yc5sxTYerqIgTs="
-  - COMMON_LOGGLY_TOKEN=null
-  - COMMON_LOGGLY_SUBDOMAIN=null
-  - COMMON_ROLLBAR_SERVER_TOKEN=null
-  - COMMON_ROLLBAR_CLIENT_TOKEN=null
-  #** Specific to sitfe service **#
-  - SITEFE_ADDRESS=0.0.0.0
-  - SITEFE_PORT=10004
-  - SITEFE_ORIGIN_DOMAIN=sitefe.test.truesparrow
-  - SITEFE_ORIGIN=http://sitefe.test.truesparrow:10004
-  - SITEFE_ORIGIN_WITH_SUBDOMAIN=http://{0}.sitefe.test.truesparrow:10004
-  #** Specific to identity service **#
-  - IDENTITY_ADDRESS=0.0.0.0
-  - IDENTITY_PORT=10001
-  - IDENTITY_ORIGIN=http://identity.test.truesparrow:10001
-  - IDENTITY_CLIENTS=http://content.test.truesparrow:10002,http://sitefe.test.truesparrow:10004
-  - IDENTITY_DATABASE_HOST=postgres.test.truesparrow
-  - IDENTITY_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
-  - IDENTITY_DATABASE_MIGRATIONS_DIR=./migrations
-  - IDENTITY_DATABASE_MIGRATIONS_TABLE=migrations_identity
-  # IDENTITY_AUTH0_CLIENT_ID=null
-  - secure: "aCd/Svqec5WPs4XwaCI9YDDn9PHS0tDIbZb2dPbDfCbR27tENvbrhzk17xYjvf49Bug+9UUKCxk6FZlmSXhYIwu1iwja/V8V10Xik3lV0u48fAfdj8DkCbmRdgyD7wbHPKHFrk7hbjyhE2nWu0uFVSEWq2N8X7nwYMo5e5ecCY9teIL5NVislZL4+3XGV17z332pOBdWX6cUrqwDCcI/JmZnxZ1OxaxaznMWiQUGyhpWW8Jo8ts0EMwXxrvhqxg1zNboeL2S5bwycyaAw0GbMoFCTYB+nQkjw7ku7sckcDsBG9hw5Uj5h0Yd20qvawLIjpMGgVJkbj0ZT/baXTwmkOCcJNE9JVn9f6/pEUsWM0ZiXxWVbimZ2uTkqOc5zRQn/fdQwa8SzqnVmLBEBFkIQ6SoJbsP5/6dWXsk1pvD90zJb91mdM+9kaG6lxdsCE+zNVyuq3M5BvgY1/I7XfQ4croGSR3s0YTxBXbY27cAzy11F7X+PXnS24Ls34Bm0aU/xJP/E27k0s/WgjVSGALHrNGNnnk1DVF8MCIuL/IWZAfrGnE0zXcZxjwxbeDcjQDh4XshMxr+48RvtL8sGEvKvBoW8Dv4MUDriZkDEzFoQudafaYlQ9WieK+7ij6eFZC+10MHY6HmPV0fUttaHIu6U8iCgEyDKuJ5EdqgTu4MGXE="
-  # IDENTITY_AUTH0_CLIENT_SECRET=null
-  - secure: "VJwfv/RSVQlsN1BEjsYzwiNp07GmLYTv29H6PnvHeCi9BeBknvoHUYOEbYu8Op7xeflihoN4siA/+RIT/nlE0uwY2n+lnJtb3Bukm9gxMobgP4x3PA6FCqsAhP1xqO6yi+r/56TRum65pXY5cufRaVylK+ZlwpfotYZS2Q14vpRmwCmo+qGp6yuY0zjLY1rZ5RoVttFxoMwa2K6fxAzZa2TTY8MOhl+DLsSBpVYq9vuheYfdX8zEW+YXY+pAwIFB7vCfnHH08i799ChDyCVNKK3v0jllzRNgJSWxH65fkJax41vd99dkdf/w9htpP6MlZZtJz7R/GbmN97kMvJ3+xAssG2geVuvhenBopP+KdJBrp36+P8SmBEIcQfqEdtQfddrzxX6owIu1fT8k6N60ob+k/OTsFrZNlP1GlVb92EfMdvrGStNZYexKEtUi7n3uYy4W/cqxettO9xkjUrwxVVaWbKevLFJoOFi4GN82gpXULtLwoJeb1jlirwbWZq+EtDVZEraunppZhoMNei8Q+W0MsQYo0GxxpMC6YeSH8e3HP9zcFQYHRuHGY3yP3V+Pgfg1LrM/lHJHFxP7BXrPmYrt3rBAirzVFa5HLK/IfrejNWrWPIgYNZEEikazIb2bQGOfhE5sZ7aJ3RXygIEE4ndC54/iwN4xZSO17SiB1KA="
-  - IDENTITY_AUTH0_DOMAIN=null
-  #** Specific to content service **#
-  - CONTENT_ADDRESS=0.0.0.0
-  - CONTENT_PORT=10002
-  - CONTENT_ORIGIN=http://content.test.truesparrow:10002
-  - CONTENT_CLIENTS=http://sitefe.test.truesparrow:10004
-  - CONTENT_DATABASE_HOST=postgres.test.truesparrow
-  - CONTENT_DATABASE_URL=postgresql://truesparrow:truesparrow@postgres.test.truesparrow:5432/truesparrow
-  - CONTENT_DATABASE_MIGRATIONS_DIR=./migrations
-  - CONTENT_DATABASE_MIGRATIONS_TABLE=migrations_content
-  #* Travis build *#
   - GEMFURY_USER=truesparrow
   # GEMFURY_API_KEY=???
   - secure: "uEiaceH4szs6OKdnrW2Of00TCCn1RRIlViFVLNGgo70az5JqmFh0YZwU7lI3XYIRF/cI970HXIWwB6ITMUwUoBbYxx5jNhlZoDq5gD3jdywQBz97g3vHwYjk5Zg3Tr5yr50PZNuYljWzIAomGmVn3so4XbNPSCyPBjWgomAC6ePcy6lg1qRHxyXVw8mV5nyutMHNj/RNRbDGjfkO+Dq3SuaGtdEoVSq1lG3GykjbwBY0jc5orIIOiTiZi6pAFOCgbpnYn/30VqlRUlcDt7c7TXEhazCuTJocMj3XqvB449IH2m929USMJGqDXv6/HMPklUiMVYnp51t28HBLsO0U8EggVvXJUeg95zCPAplhmeMWs0cruhiHQQHS89NwzoPAKFH6qZYvolZlSlvW5radYJh1+EvQ7lPupI1f3ZDZHlM/1yRmvvCb1ng6Jn7ciFcG3Ei/a+0LY+ouTDt1zhvUsp+2d+3elPQFBeWIWDVgSIgEKgSdhlMEw9P5YsZxxRIX1gn8U+LDjGvA7/I47yZqm9jdpXU3UbWlsLMN6qG6lPModt1ti7Vk4O5A4mnYq7KrJeWJSXkBzzMQCi0a7RcSzMAYBmC3RIouLGGJiFNvmIzV0QXCDZWUVbyJPzkbdm2XU6B1k+C0Q0UKvYWnq824JXumkqB+Ur2LbbfpxK6caLw="

@@ -66,9 +66,17 @@ async function main() {
 
     const internalWebFetcher: WebFetcher = new InternalWebFetcher();
     const identityClient: IdentityClient = newIdentityClient(
-        config.ENV, config.ORIGIN, config.IDENTITY_SERVICE_HOST, internalWebFetcher);
+        config.ENV,
+        config.ORIGIN,
+        `${config.IDENTITY_SERVICE_HOST}:${config.IDENTITY_SERVICE_PORT}`,
+        internalWebFetcher
+    );
     const contentPublicClient: ContentPublicClient = newContentPublicClient(
-        config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, internalWebFetcher);
+        config.ENV,
+        config.ORIGIN,
+        `${config.CONTENT_SERVICE_HOST}:${config.CONTENT_SERVICE_PORT}`,
+        internalWebFetcher
+    );
 
     const bundles: Bundles = isLocal(config.ENV)
         ? new WebpackDevBundles(theWebpackDevMiddleware(webpack(webpackConfig), {
@@ -92,8 +100,9 @@ async function main() {
             originWithSubDomain: config.ORIGIN_WITH_SUBDOMAIN(subDomain),
             subDomain: subDomain,
             contentServiceHost: config.CONTENT_SERVICE_HOST,
+            contentServicePort: config.CONTENT_SERVICE_PORT,
             googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
-            rollbarClientToken: config.ROLLBAR_CLIENT_TOKEN,
+            rollbarClientToken: null,
             session: session,
             language: language
         };
@@ -258,8 +267,8 @@ async function main() {
     // Start serving
     // ********************
 
-    app.listen(config.PORT, config.ADDRESS, () => {
-        console.log(`Started ${config.NAME} service on ${config.ADDRESS}:${config.PORT}`);
+    app.listen(config.PORT, '0.0.0.0', () => {
+        console.log(`Started ${config.NAME} service on ${config.PORT}`);
     });
 }
 

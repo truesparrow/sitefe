@@ -16,7 +16,7 @@ const contentPublicClient = newContentPublicClient(
     config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, webFetcher);
 
 const rollbarClient = new Rollbar({
-    accessToken: isOnServer(config.ENV) ? (config.ROLLBAR_CLIENT_TOKEN as string) : 'FAKE_TOKEN_WONT_BE_USED_IN_LOCAL_OR_TEST',
+    accessToken: 'FAKE_TOKEN_WONT_BE_USED_IN_LOCAL_OR_TEST',
     logLevel: 'warning',
     reportLevel: 'warning',
     captureUncaught: true,

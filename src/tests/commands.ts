@@ -6,7 +6,7 @@ import { SESSION_TOKEN_COOKIE_NAME, SESSION_TOKEN_HEADER_NAME } from '@truesparr
 import { SessionAndTokenResponse } from '@truesparrow/identity-sdk-js/dtos'
 import { SessionToken } from '@truesparrow/identity-sdk-js/session-token'
 
-import { ADMINFE_EXTERNAL_DOMAIN, ORIGIN, IDENTITY_SERVICE_HOST, CONTENT_SERVICE_HOST } from './shared'
+import { ADMINFE_EXTERNAL_DOMAIN, ORIGIN, IDENTITY_SERVICE_HOST, CONTENT_SERVICE_HOST, IDENTITY_SERVICE_PORT, CONTENT_SERVICE_PORT } from './shared'
 
 
 let uniquor = 0;
@@ -14,14 +14,14 @@ let uniquor = 0;
 
 function clearOutData() {
     cy.request({
-        url: `http://${IDENTITY_SERVICE_HOST}/test/clear-out`,
+        url: `http://${IDENTITY_SERVICE_HOST}:${IDENTITY_SERVICE_PORT}/test/clear-out`,
         method: 'POST',
         headers: {
             Origin: ORIGIN
         }
     });
     cy.request({
-        url: `http://${CONTENT_SERVICE_HOST}/test/clear-out`,
+        url: `http://${CONTENT_SERVICE_HOST}:${CONTENT_SERVICE_PORT}/test/clear-out`,
         method: 'POST',
         headers: {
             Origin: ORIGIN
@@ -36,7 +36,7 @@ function loginAsUser(userFixture: string) {
     cy.fixture(userFixture).then(userData => {
         const newUserData = Object.assign({}, userData, { sub: uuid() });
         cy.request({
-            url: `http://${IDENTITY_SERVICE_HOST}/test/create-test-user`,
+            url: `http://${IDENTITY_SERVICE_HOST}:${IDENTITY_SERVICE_PORT}/test/create-test-user`,
             method: 'POST',
             headers: {
                 Origin: ORIGIN
@@ -62,7 +62,7 @@ function addEvent(sessionToken: SessionToken, eventFixture: string) {
     cy.fixture(eventFixture).then(eventData => {
         const newEventData = Object.assign({}, eventData, { subDomain: eventData.subDomain + '-' + uniquor++ });
         cy.request({
-            url: `http://${CONTENT_SERVICE_HOST}/test/add-event`,
+            url: `http://${CONTENT_SERVICE_HOST}:${CONTENT_SERVICE_PORT}/test/add-event`,
             method: 'POST',
             headers: {
                 Origin: ORIGIN,

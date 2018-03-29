@@ -1,34 +1,27 @@
 import { getNamespace } from 'continuation-local-storage'
 import { config } from 'dotenv'
 
-import { Context, Env, parseContext, parseEnv, isOnServer } from '@truesparrow/common-js'
+import { Context, Env, parseContext, parseEnv } from '@truesparrow/common-js'
 import { getFromEnv } from '@truesparrow/common-server-js'
 import { Session } from '@truesparrow/identity-sdk-js'
 
-config();
+config({ path: 'config/env.sitefe' });
 
-// Common to all services
-
-export const ENV: Env = parseEnv(getFromEnv('COMMON_ENV'));
-export const CONTEXT: Context = parseContext(getFromEnv('COMMON_CONTEXT'));
-
-export const IDENTITY_SERVICE_HOST: string = getFromEnv('COMMON_IDENTITY_SERVICE_HOST');
-export const CONTENT_SERVICE_HOST: string = getFromEnv('COMMON_CONTENT_SERVICE_HOST');
-
-export const GOOGLE_MAPS_API_KEY: string = getFromEnv('COMMON_GOOGLE_MAPS_API_KEY');
-export const LOGGLY_TOKEN: string | null = isOnServer(ENV) ? getFromEnv('COMMON_LOGGLY_TOKEN') : null;
-export const LOGGLY_SUBDOMAIN: string | null = isOnServer(ENV) ? getFromEnv('COMMON_LOGGLY_SUBDOMAIN') : null;
-export const ROLLBAR_SERVER_TOKEN: string | null = isOnServer(ENV) ? getFromEnv('COMMON_ROLLBAR_SERVER_TOKEN') : null;
-export const ROLLBAR_CLIENT_TOKEN: string | null = isOnServer(ENV) ? getFromEnv('COMMON_ROLLBAR_CLIENT_TOKEN') : null;
-
-// Specific to sitefe service
+export const ENV: Env = parseEnv(getFromEnv('ENV'));
+export const CONTEXT: Context = parseContext(getFromEnv('CONTEXT'));
 
 export const NAME: string = 'sitefe';
-export const ADDRESS: string = getFromEnv('SITEFE_ADDRESS');
-export const PORT: number = parseInt(getFromEnv('SITEFE_PORT'), 10);
-export const ORIGIN: string = getFromEnv('SITEFE_ORIGIN');
-const originWithSubdomain: string = getFromEnv('SITEFE_ORIGIN_WITH_SUBDOMAIN');
-export const ORIGIN_WITH_SUBDOMAIN = (subDomain: string) => originWithSubdomain.replace('{0}', subDomain);
+export const HOST: string = getFromEnv('HOST');
+export const PORT: number = parseInt(getFromEnv('PORT'), 10);
+export const ORIGIN: string = `http://${HOST}:${PORT}`;
+export const ORIGIN_WITH_SUBDOMAIN = (subDomain: string) => `http://${subDomain}.${HOST}:${PORT}`;
+
+export const IDENTITY_SERVICE_HOST: string = getFromEnv('IDENTITY_SERVICE_HOST');
+export const IDENTITY_SERVICE_PORT: number = parseInt(getFromEnv('IDENTITY_SERVICE_PORT'), 10);
+export const CONTENT_SERVICE_HOST: string = getFromEnv('CONTENT_SERVICE_HOST');
+export const CONTENT_SERVICE_PORT: number = parseInt(getFromEnv('CONTENT_SERVICE_PORT'), 10);
+
+export const GOOGLE_MAPS_API_KEY: string = getFromEnv('GOOGLE_MAPS_API_KEY');
 
 export const CLS_NAMESPACE_NAME: string = 'truesparrow.request';
 

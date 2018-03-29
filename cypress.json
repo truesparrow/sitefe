@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://sitefe.local.truesparrow:10004",
+  "baseUrl": "http://sitefe.truesparrow:10004",
   "integrationFolder": "out/tests",
   "fixturesFolder": "src/tests/fixtures",
   "sourceType": "module",
