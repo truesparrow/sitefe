@@ -16,10 +16,10 @@ export class ClientConfig {
     env: Env;
 
     @MarshalWith(r.WebUriMarshaller)
-    origin: string;
+    internalOrigin: string;
 
     @MarshalWith(r.WebUriMarshaller)
-    originWithSubDomain: string;
+    externalOriginWithSubDomain: string;
 
     @MarshalWith(SubDomainMarshaller)
     subDomain: string;

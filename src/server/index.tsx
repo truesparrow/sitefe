@@ -1,4 +1,5 @@
 import { wrap } from 'async-middleware'
+import * as cookieParser from 'cookie-parser'
 import * as compression from 'compression'
 import { createNamespace } from 'continuation-local-storage'
 import * as express from 'express'
@@ -66,14 +67,12 @@ async function main() {
 
     const internalWebFetcher: WebFetcher = new InternalWebFetcher();
     const identityClient: IdentityClient = newIdentityClient(
-        config.ENV,
-        config.ORIGIN,
+        config.INTERNAL_ORIGIN,
         `${config.IDENTITY_SERVICE_HOST}:${config.IDENTITY_SERVICE_PORT}`,
         internalWebFetcher
     );
     const contentPublicClient: ContentPublicClient = newContentPublicClient(
-        config.ENV,
-        config.ORIGIN,
+        config.INTERNAL_ORIGIN,
         `${config.CONTENT_SERVICE_HOST}:${config.CONTENT_SERVICE_PORT}`,
         internalWebFetcher
     );
@@ -96,8 +95,8 @@ async function main() {
 
         const clientConfig = {
             env: config.ENV,
-            origin: config.ORIGIN,
-            originWithSubDomain: config.ORIGIN_WITH_SUBDOMAIN(subDomain),
+            internalOrigin: config.INTERNAL_ORIGIN,
+            externalOriginWithSubDomain: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
             subDomain: subDomain,
             contentServiceHost: config.CONTENT_SERVICE_HOST,
             contentServicePort: config.CONTENT_SERVICE_PORT,
@@ -143,7 +142,7 @@ async function main() {
 
     app.disable('x-powered-by');
     app.use(newNamespaceMiddleware(namespace))
-    app.set('subdomain offset', config.ORIGIN.split('.').length);
+    app.set('subdomain offset', config.EXTERNAL_ORIGIN.split('.').length);
     if (true || isNotOnServer(config.ENV)) {
         app.use(newLocalCommonServerMiddleware(config.NAME, config.ENV, false));
     } else {
@@ -161,7 +160,7 @@ async function main() {
     // ********************
 
     // An API gateway for the client side code. Needs session to exist in the request.
-    app.use('/real/api-gateway', newApiGatewayRouter(config.ORIGIN, internalWebFetcher));
+    app.use('/real/api-gateway', newApiGatewayRouter(config.INTERNAL_ORIGIN, internalWebFetcher));
 
     // Static serving of the client side code assets (index.html, vendor.js etc). No session. Derived
     // from the bundles.
@@ -176,10 +175,14 @@ async function main() {
 
     const siteInfoRouter = express.Router();
 
-    siteInfoRouter.get('/robots.txt', (_req: Request, res: express.Response) => {
+    siteInfoRouter.get('/robots.txt', isForDevelopment(config.ENV) ? [cookieParser()] : [], (req: Request, res: express.Response) => {
+        const subDomain = extractSubDomain(req);
+
         res.status(HttpStatus.OK);
         res.type('.txt');
-        res.write(Mustache.render(bundles.getRobotsTxt(), { HOME_URI: config.ORIGIN }));
+        res.write(Mustache.render(bundles.getRobotsTxt(), {
+            HOME_URI: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain)
+        }));
         res.end();
     });
 
@@ -190,11 +193,13 @@ async function main() {
         res.end();
     });
 
-    siteInfoRouter.get('/sitemap.xml', (_req: Request, res: express.Response) => {
+    siteInfoRouter.get('/sitemap.xml', isForDevelopment(config.ENV) ? [cookieParser()] : [], (req: Request, res: express.Response) => {
+        const subDomain = extractSubDomain(req);
+
         res.status(HttpStatus.OK);
         res.type('application/xml; charset=utf-8');
         res.write(Mustache.render(bundles.getSitemapXml(), {
-            HOME_URI: config.ORIGIN,
+            HOME_URI: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
             HOME_LAST_MOD: new Date().toISOString()
         }));
         res.end();
@@ -213,22 +218,7 @@ async function main() {
 
     appRouter.use(newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient));
     appRouter.get('*', wrap(async (req: RequestWithIdentity, res: express.Response) => {
-        if (isForDevelopment(config.ENV)) {
-            if (req.subdomains.length != 1 && !req.cookies.hasOwnProperty('truesparrow-subdomain')) {
-                throw new Error('Nothing to see here');
-            }
-        } else {
-            if (req.subdomains.length != 1) {
-                throw new Error('Nothing to see here');
-            }
-        }
-
-        const subDomain =
-            isForDevelopment(config.ENV)
-                ? (req.subdomains.length == 1
-                    ? req.subdomains[0]
-                    : req.cookies['truesparrow-subdomain'])
-                : req.subdomains[0];
+        const subDomain = extractSubDomain(req);
         let eventIsMissing: boolean = false;
         let event: Event | null = null;
 
@@ -270,6 +260,24 @@ async function main() {
     app.listen(config.PORT, '0.0.0.0', () => {
         console.log(`Started ${config.NAME} service on ${config.PORT}`);
     });
+
+    function extractSubDomain(req: Request) {
+        if (isForDevelopment(config.ENV)) {
+            if (req.subdomains.length != 1 && !req.cookies.hasOwnProperty('truesparrow-subdomain')) {
+                throw new Error('Nothing to see here');
+            }
+        } else {
+            if (req.subdomains.length != 1) {
+                throw new Error('Nothing to see here');
+            }
+        }
+
+        return isForDevelopment(config.ENV)
+            ? (req.subdomains.length == 1
+                ? req.subdomains[0]
+                : req.cookies['truesparrow-subdomain'])
+            : req.subdomains[0];
+    }
 }
 
 

@@ -15,7 +15,8 @@ export const ENV: Env = clientConfig.env;
 export const CONTEXT: Context = Context.Client;
 
 export const NAME: string = 'sitefe';
-export const ORIGIN: string = clientConfig.originWithSubDomain;
+export const INTERNAL_ORIGIN: string = clientConfig.internalOrigin;
+export const EXTERNAL_ORIGIN: string = clientConfig.externalOriginWithSubDomain;
 export const SUBDOMAIN: string = clientConfig.subDomain;
 
 export const CONTENT_SERVICE_HOST: string = clientConfig.contentServiceHost;

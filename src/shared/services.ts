@@ -10,10 +10,10 @@ import { ContentPublicClient, newContentPublicClient } from '@truesparrow/conten
 import * as config from './config'
 
 
-const webFetcher = new ApiGatewayWebFetcher(config.ORIGIN);
+const webFetcher = new ApiGatewayWebFetcher(config.INTERNAL_ORIGIN);
 
 const contentPublicClient = newContentPublicClient(
-    config.ENV, config.ORIGIN, config.CONTENT_SERVICE_HOST, webFetcher);
+    config.INTERNAL_ORIGIN, `${config.CONTENT_SERVICE_HOST}:${config.CONTENT_SERVICE_PORT}`, webFetcher);
 
 const rollbarClient = new Rollbar({
     accessToken: 'FAKE_TOKEN_WONT_BE_USED_IN_LOCAL_OR_TEST',
