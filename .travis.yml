@@ -21,12 +21,25 @@ addons:
 
 env:
   global:
+  - PATH=$PATH:${HOME}/google-cloud-sdk/bin
   - GEMFURY_USER=truesparrow
   # GEMFURY_API_KEY=???
   - secure: "uEiaceH4szs6OKdnrW2Of00TCCn1RRIlViFVLNGgo70az5JqmFh0YZwU7lI3XYIRF/cI970HXIWwB6ITMUwUoBbYxx5jNhlZoDq5gD3jdywQBz97g3vHwYjk5Zg3Tr5yr50PZNuYljWzIAomGmVn3so4XbNPSCyPBjWgomAC6ePcy6lg1qRHxyXVw8mV5nyutMHNj/RNRbDGjfkO+Dq3SuaGtdEoVSq1lG3GykjbwBY0jc5orIIOiTiZi6pAFOCgbpnYn/30VqlRUlcDt7c7TXEhazCuTJocMj3XqvB449IH2m929USMJGqDXv6/HMPklUiMVYnp51t28HBLsO0U8EggVvXJUeg95zCPAplhmeMWs0cruhiHQQHS89NwzoPAKFH6qZYvolZlSlvW5radYJh1+EvQ7lPupI1f3ZDZHlM/1yRmvvCb1ng6Jn7ciFcG3Ei/a+0LY+ouTDt1zhvUsp+2d+3elPQFBeWIWDVgSIgEKgSdhlMEw9P5YsZxxRIX1gn8U+LDjGvA7/I47yZqm9jdpXU3UbWlsLMN6qG6lPModt1ti7Vk4O5A4mnYq7KrJeWJSXkBzzMQCi0a7RcSzMAYBmC3RIouLGGJiFNvmIzV0QXCDZWUVbyJPzkbdm2XU6B1k+C0Q0UKvYWnq824JXumkqB+Ur2LbbfpxK6caLw="
   - CYPRESS_baseUrl=${SITEFE_ORIGIN}
   # CYPRESS_RECORD_KEY
   - secure: "i3Vy9Hl+ezhD4PJn4KpbJU3PYaxAQ7h5KLMEI16BbydSTsyaqFASSb0DZV4CFgcmZ04TExVNfuDGbqwYKR0mAfpg74qR2/cs5F8YyLzL2SueHo9WuFDYSWWjJXfkryFl5BSZzAOTCOdgtXVNhD99QdKiHs3tY9Q66dgIaznZPW9wWm45P/fM7wqzNv8HeZjhqxMqHamHQzdrlH3/t8dp6usDYFZPhMv01Ryi2XkbuNNzPJaJkoAPmbzS40z4cYzK1ELx3XZikrwFlJnnvWuV4vpUezq4jJokz4nT5/rmnYAiHnlQujWn5wosUnfYuRXbqwszevDPlpFv3Ao5PdEUIsQfIyiMU6tH+MNwkD2hD2f3IjEINHo2IZtX0rbvhEYmrspkB+HYUoDdpdzsRxWCetSE/xzWHRBrwykvO5S3yzReD0rPJeaAXTGw4zrvTgpdwNxWoSB6HFYSEVsTTz8p18H3pqZTukIpRZay0YIglSSNykKZUC716AnBzjq7FtjxKVPRVCfi0tAY/vNZ/D8/rs42wE77AHuRxGn6lUbsAgAFDRJ2XmXxtNwJIuPGqR19ud/2yBqV8rUbwZ1s+d96Nk6cKuNI1oqMqSPbtcm012mbjpYUSnu9QyIhZugI5pRie4+5ZYPe/r7cskTjhuslAI7dSQVaEGLed7VpQkWM16M="
+  - GCP_STAGING_PROJECT=chmsqrt2-truesparrow-staging
+  - GCP_STAGING_ZONE=europe-west1-b
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  - GOOGLE_APPLICATION_CREDENTIALS=config/gcp-ci-builder-key.json
+
+before_install:
+- if [ ! -d ${HOME}/google-cloud-sdk/bin ]; then
+    rm -rf ${HOME}/google-cloud-sdk;
+    curl https://sdk.cloud.google.com | bash /dev/stdin --disable-prompts;
+    ${HOME}/google-cloud-sdk/bin/gcloud -q components update kubectl;
+  fi
+- source ${HOME}/google-cloud-sdk/path.bash.inc
 
 install:
 - npm install --registry=https://npm-proxy.fury.io/${GEMFURY_API_KEY}/${GEMFURY_USER}/ --progress=false
@@ -61,10 +74,21 @@ deploy:
 - provider: script
   skip_cleanup: true
   script:
-    cat config/gcp-ci-builder-key.json | docker login --username _json_key --password-stdin https://eu.gcr.io;
+    cat ${GOOGLE_APPLICATION_CREDENTIALS} | docker login --username _json_key --password-stdin https://eu.gcr.io;
     docker build --tag eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:$TRAVIS_TAG .;
     docker push eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:$TRAVIS_TAG;
     docker build --tag eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:latest .;
     docker push eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:latest
+  on:
+    tags: true
+- provider: script
+  skip_cleanup: true
+  script:
+    ${HOME}/google-cloud-sdk/bin/gcloud config set project $GCP_STAGING_PROJECT;
+    ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS};
+    ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials chmsqrt2-truesparrow-staging-cluster --zone ${GCP_STAGING_ZONE};
+    kubectl apply -f k8s-service.yaml --record;
+    kubectl apply -f k8s-deployment.yaml --record;
+    kubectl set image deployment/sitefe sitefe=eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:$TRAVIS_TAG
   on:
     tags: true

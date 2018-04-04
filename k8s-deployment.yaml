@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitefe
+  labels:
+    service: sitefe
+    env: staging
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: sitefe
+      env: staging
+      tier: backend
+  minReadySeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        service: sitefe
+        env: staging
+        tier: backend
+    spec:
+      containers:
+      - name: sitefe
+        image: eu.gcr.io/chmsqrt2-truesparrow-common/sitefe:latest
+        ports:
+          - containerPort: 10004
+        livenessProbe:
+          httpGet:
+            path: /status/check
+            port: 10004
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status/check
+            port: 10004
+        envFrom:
+        - configMapRef:
+            name: sitefe
+        env:
+        - name: GOOGLE_MAPS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sitefe-secrets
+              key: GOOGLE_MAPS_API_KEY
