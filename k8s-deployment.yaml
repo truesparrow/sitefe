@@ -4,15 +4,13 @@ metadata:
   name: sitefe
   labels:
     service: sitefe
-    env: staging
-    tier: backend
+    tier: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
       service: sitefe
-      env: staging
-      tier: backend
+      tier: frontend
   minReadySeconds: 30
   strategy:
     type: RollingUpdate
@@ -23,8 +21,7 @@ spec:
     metadata:
       labels:
         service: sitefe
-        env: staging
-        tier: backend
+        tier: frontend
     spec:
       containers:
       - name: sitefe

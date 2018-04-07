@@ -5,8 +5,7 @@ metadata:
 spec:
   selector:
     service: sitefe
-    env: staging
-    tier: backend
+    tier: frontend
   type: NodePort
   ports:
   - protocol: TCP
