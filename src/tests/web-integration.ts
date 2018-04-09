@@ -62,7 +62,7 @@ describe('Large scale SEO & Web integration', () => {
         })
     });
 
-    escribe('browserconfig.xml', () => {
+    describe('browserconfig.xml', () => {
         it('Should exist', () => {
             cy.request('/browserconfig.xml');
         });
