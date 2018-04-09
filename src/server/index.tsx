@@ -26,6 +26,7 @@ import {
 } from '@truesparrow/common-js'
 import {
     //    newCommonServerMiddleware,
+    newCommonFrontendServerMiddleware,
     newHealthCheckRouter,
     newLocalCommonServerMiddleware,
     newNamespaceMiddleware,
@@ -153,6 +154,7 @@ async function main() {
         //     config.LOGGLY_SUBDOMAIN as string,
         //     config.ROLLBAR_SERVER_TOKEN as string));
     }
+    app.use(newCommonFrontendServerMiddleware(config.ENV, ['/status/check']));
     app.use(compression({ threshold: 0 }));
 
     // Setup the /real portion of the path-space. Here are things which don't belong to the client-side
