@@ -55,7 +55,7 @@ class AppFrameCarousel extends React.Component<AppFrameCarouselProps, AppFrameCa
         const pictures = event.pictureSet.pictures.map(picture => {
             const extraClass =
                 (picture.position == this.state.carouselCurrentImage + 1) ? 'slidein' :
-                (picture.position == this.state.carouselPreviousImage + 1) ? 'slideout' : '';
+                    (picture.position == this.state.carouselPreviousImage + 1) ? 'slideout' : '';
 
             return (
                 <img
@@ -159,6 +159,11 @@ class _AppFrame extends React.Component<Props, {}> {
         } else {
             const event = this.props.event as Event;
 
+            const betterHelmet =
+                <Helmet>
+                    <title>{event.title}</title>
+                </Helmet>;
+
             const subRoutes = event.subEventDetails
                 .filter(subEvent => subEvent.haveEvent)
                 .map(subEvent => {
@@ -173,6 +178,7 @@ class _AppFrame extends React.Component<Props, {}> {
 
             return (
                 <div className="app-frame">
+                    {betterHelmet}
                     <AppFrameCarousel event={event} />
                     <Switch>
                         <Route exact path="/" component={HomePage} />

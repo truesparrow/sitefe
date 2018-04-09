@@ -99,6 +99,7 @@ async function main() {
             internalOrigin: config.INTERNAL_ORIGIN,
             externalOriginWithSubDomain: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
             subDomain: subDomain,
+            styleApplicationName: config.STYLE_APPLICATION_NAME,
             contentServiceHost: config.CONTENT_SERVICE_HOST,
             contentServicePort: config.CONTENT_SERVICE_PORT,
             googleMapsApiKey: config.GOOGLE_MAPS_API_KEY,
@@ -127,6 +128,8 @@ async function main() {
             PAGE_TITLE_HTML: helmetData.title,
             PAGE_META_HTML: helmetData.meta,
             PAGE_LINK_HTML: helmetData.link,
+            STYLE_PRIMARY_COLOR: config.STYLE_PRIMARY_COLOR,
+            STYLE_GRAY_COLOR: config.STYLE_GRAY_COLOR,
             APP_HTML: appHtml,
             CLIENT_CONFIG: serializeJavascript(clientConfigMarshaller.pack(clientConfig), { isJSON: true }),
             CLIENT_INITIAL_STATE: serializeJavascript(clientInitialStateMarshaller.pack(clientInitialState), { isJSON: true }),
@@ -206,6 +209,34 @@ async function main() {
         }));
         res.end();
     });
+
+    siteInfoRouter.get('/browserconfig.xml', (_req: Request, res: express.Response) => {
+        res.status(HttpStatus.OK);
+        res.type('application/xml; charset=utf-8');
+        res.write(Mustache.render(bundles.getBrowserConfigXml(), {
+            STYLE_PRIMARY_COLOR: config.STYLE_PRIMARY_COLOR
+        }));
+        res.end();
+    });
+
+    siteInfoRouter.get('/site.webmanifest', [newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient)], wrap(async (req: RequestWithIdentity, res: express.Response) => {
+        const subDomain = extractSubDomain(req);
+
+        let event: Event | null = null;
+        try {
+            event = await contentPublicClient.withContext(req.sessionToken).getEventBySubDomain(subDomain);
+        } catch (e) {
+        }
+
+        res.status(HttpStatus.OK);
+        res.type('.txt');
+        res.write(Mustache.render(bundles.getSiteWebManifest(), {
+            EXTERNAL_ORIGIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
+            STYLE_APPLICATION_NAME: event == null ? config.STYLE_APPLICATION_NAME : event.title,
+            STYLE_PRIMARY_COLOR: config.STYLE_PRIMARY_COLOR
+        }));
+        res.end();
+    }));
 
     app.use('/', siteInfoRouter);
 

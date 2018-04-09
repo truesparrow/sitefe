@@ -18,6 +18,7 @@ export const NAME: string = 'sitefe';
 export const INTERNAL_ORIGIN: string = clientConfig.internalOrigin;
 export const EXTERNAL_ORIGIN: string = clientConfig.externalOriginWithSubDomain;
 export const SUBDOMAIN: string = clientConfig.subDomain;
+export const STYLE_APPLICATION_NAME: string = clientConfig.styleApplicationName;
 
 export const CONTENT_SERVICE_HOST: string = clientConfig.contentServiceHost;
 export const CONTENT_SERVICE_PORT: number = clientConfig.contentServicePort;

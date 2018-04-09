@@ -9,6 +9,8 @@ export interface Bundles {
     getHumansTxt(): string;
     getSitemapXml(): string;
     getManifestJs(): string;
+    getBrowserConfigXml(): string;
+    getSiteWebManifest(): string;
     getOtherBundlesRouter(): express.RequestHandler;
 }
 
@@ -40,6 +42,14 @@ export class WebpackDevBundles implements Bundles {
         return this._webpackDevMiddleware.fileSystem.readFileSync(path.join(process.cwd(), 'out', 'client', 'manifest.js'), 'utf-8');
     }
 
+    getBrowserConfigXml(): string {
+        return this._webpackDevMiddleware.fileSystem.readFileSync(path.join(process.cwd(), 'out', 'client', 'browserconfig.xml'), 'utf-8');
+    }
+
+    getSiteWebManifest(): string {
+        return this._webpackDevMiddleware.fileSystem.readFileSync(path.join(process.cwd(), 'out', 'client', 'site.webmanifest'), 'utf-8');
+    }
+
     getOtherBundlesRouter(): express.RequestHandler {
         return this._webpackDevMiddleware;
     }
@@ -52,6 +62,8 @@ export class CompiledBundles implements Bundles {
     private readonly _humansTxt: string;
     private readonly _sitemapXml: string;
     private readonly _manifestJs: string;
+    private readonly _browserConfigXml: string;
+    private readonly _siteWebManifest: string;
 
     constructor() {
         this._htmlIndexTemplate = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'index.html'), 'utf-8');
@@ -59,6 +71,8 @@ export class CompiledBundles implements Bundles {
         this._humansTxt = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'humans.txt'), 'utf-8');
         this._sitemapXml = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'sitemap.xml'), 'utf-8');
         this._manifestJs = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'manifest.js'), 'utf-8');
+        this._browserConfigXml = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'browserconfig.xml'), 'utf-8');
+        this._siteWebManifest = fs.readFileSync(path.join(process.cwd(), 'out', 'client', 'site.webmanifest'), 'utf-8');
     }
 
     getHtmlIndexTemplate(): string {
@@ -79,6 +93,14 @@ export class CompiledBundles implements Bundles {
 
     getManifestJs(): string {
         return this._manifestJs;
+    }
+
+    getBrowserConfigXml(): string {
+        return this._browserConfigXml;
+    }
+
+    getSiteWebManifest(): string {
+        return this._siteWebManifest;
     }
 
     getOtherBundlesRouter(): express.RequestHandler {

@@ -1,6 +1,6 @@
 {
     "name": "@truesparrow/sitefe",
-    "version": "0.6.1",
+    "version": "0.7.0",
     "description": "The frontend to the truesparrow site application",
     "author": "CHM SQRT2 Team",
     "scripts": {

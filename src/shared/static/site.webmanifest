@@ -1,0 +1,20 @@
+{
+    "name": "{{{ STYLE_APPLICATION_NAME }}}",
+    "short_name": "{{{ STYLE_APPLICATION_NAME }}}",
+    "icons": [
+        {
+            "src": "/real/client/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/real/client/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "{{{ STYLE_PRIMARY_COLOR }}}",
+    "background_color": "#ffffff",
+    "start_url": "{{{ EXTERNAL_ORIGIN }}}",
+    "display": "standalone"
+}

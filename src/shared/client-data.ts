@@ -25,6 +25,9 @@ export class ClientConfig {
     subDomain: string;
 
     @MarshalWith(r.StringMarshaller)
+    styleApplicationName: string;
+
+    @MarshalWith(r.StringMarshaller)
     contentServiceHost: string;
 
     @MarshalWith(r.PositiveIntegerMarshaller)
