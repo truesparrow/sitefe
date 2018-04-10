@@ -70,7 +70,11 @@ describe('Large scale SEO & Web integration', () => {
 
     describe('site.webmanifest', () => {
         it('Should exist', () => {
-            cy.request('/site.webmanifest');
+            cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+                cy.addEvent(sessionToken, 'event1.json').then(event => {
+                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'site.webmanifest');
+                });
+            });
         });
     });
 });
