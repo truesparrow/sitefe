@@ -1,3 +1,4 @@
+import { expect } from 'chai'
 import 'mocha'
 import * as HttpStatus from 'http-status-codes'
 
@@ -65,11 +66,25 @@ Contact: ${CONTACT_EMAIL}
         })
     });
 
-    describe('sitemap.xml', () => {
+    describe.only('sitemap.xml', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
-                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'sitemap.xml');
+                    const homeUri = event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT);
+                    cy.requestSiteFe(homeUri + 'sitemap.xml').then(resp => {
+                        expect(resp.status).to.eq(HttpStatus.OK);
+                        expect(resp.headers['content-type']).to.eq('application/xml; charset=utf-8');
+                        expect(resp.body).to.contain(`<?xml version="1.0" encoding="utf-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+`);
+                        expect(resp.body).to.contain(`<loc>${homeUri}</loc>`);
+                        expect(resp.body).to.contain(`<loc>${homeUri}civil-ceremony</loc>`);
+                        expect(resp.body).to.contain(`<loc>${homeUri}religious-ceremony</loc>`);
+                        expect(resp.body).to.contain(`<loc>${homeUri}reception</loc>`);
+                    });
                 });
             });
         })
@@ -99,7 +114,7 @@ Contact: ${CONTACT_EMAIL}
         });
     });
 
-    describe.only('site.webmanifest', () => {
+    describe('site.webmanifest', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {

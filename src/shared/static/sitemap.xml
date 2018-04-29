@@ -5,9 +5,18 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
   <url>
-    <loc>{{{ EXTERNAL_ORIGIN_WITH_SUBDOMAIN }}}</loc>
+    <loc>{{{ EXTERNAL_ORIGIN_WITH_SUBDOMAIN }}}/</loc>
     <lastmod>{{ LAST_MOD }}</lastmod>
     <changefreq>always</changefreq>
     <priority>1.0</priority>
   </url>
+
+  {{#SUBEVENTS}}
+  <url>
+    <loc>{{{ EXTERNAL_ORIGIN_WITH_SUBDOMAIN}}}/{{slug}}</loc>
+    <lastmod>{{ LAST_MOD }}</lastmod>
+    <changefreq>always</changefreq>
+    <priority>1.0</priority>
+  </url>
+  {{/SUBEVENTS}}
 </urlset>

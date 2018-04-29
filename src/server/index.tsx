@@ -201,17 +201,29 @@ async function main() {
         res.end();
     });
 
-    siteInfoRouter.get('/sitemap.xml', isForDevelopment(config.ENV) ? [cookieParser()] : [], (req: Request, res: express.Response) => {
+    siteInfoRouter.get('/sitemap.xml', (isForDevelopment(config.ENV) ? [cookieParser()] : []).concat([newSessionMiddleware(SessionLevel.None, SessionInfoSource.Cookie, config.ENV, identityClient)]), wrap(async (req: RequestWithIdentity, res: express.Response) => {
         const subDomain = extractSubDomain(req);
+
+        let event: Event | null = null;
+        try {
+            event = await contentPublicClient.withContext(req.sessionToken).getEventBySubDomain(subDomain);
+        } catch (e) {
+            res.status(HttpStatus.NOT_FOUND);
+            res.end();
+            return;
+        }
 
         res.status(HttpStatus.OK);
         res.type('application/xml; charset=utf-8');
         res.write(Mustache.render(bundles.getSitemapXml(), {
             EXTERNAL_ORIGIN_WITH_SUBDOMAIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
-            LAST_MOD: new Date().toISOString()
+            LAST_MOD: new Date().toISOString(),
+            SUBEVENTS: event.subEventDetails.map(se => {
+                return { slug: se.slug };
+            })
         }));
         res.end();
-    });
+    }));
 
     siteInfoRouter.get('/browserconfig.xml', (_req: Request, res: express.Response) => {
         res.status(HttpStatus.OK);
