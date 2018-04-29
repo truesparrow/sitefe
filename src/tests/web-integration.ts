@@ -12,7 +12,7 @@ describe('Large scale SEO & Web integration', () => {
         cy.clearOutData();
     });
 
-    describe.only('favicon.ico', () => {
+    describe('favicon.ico', () => {
         it('Should be referenced by pages', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -180,6 +180,25 @@ Contact: ${CONTACT_EMAIL}
 `);
                     });
                 });
+            });
+        });
+    });
+
+    it.only('Page-level machine information', () => {
+        cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+            cy.addEvent(sessionToken, 'event1.json').then(event => {
+                cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT));
+                runTest();
+
+                for (const subEventDetail of event.subEventDetails) {
+                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEventDetail.slug);
+                    runTest();
+                }
+
+                function runTest() {
+                    // Language
+                    cy.get('html').should('have.attr', 'lang', 'en');
+                }
             });
         });
     });

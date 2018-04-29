@@ -125,6 +125,7 @@ async function main() {
         const helmetData = Helmet.renderStatic();
 
         return [Mustache.render(bundles.getHtmlIndexTemplate(), {
+            LANGUAGE: language,
             PAGE_TITLE_HTML: helmetData.title,
             PAGE_META_HTML: helmetData.meta,
             PAGE_LINK_HTML: helmetData.link,
