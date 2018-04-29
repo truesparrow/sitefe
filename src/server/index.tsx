@@ -186,7 +186,7 @@ async function main() {
         res.status(HttpStatus.OK);
         res.type('.txt');
         res.write(Mustache.render(bundles.getRobotsTxt(), {
-            HOME_URI: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain)
+            EXTERNAL_ORIGIN_WITH_SUBDOMAIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain)
         }));
         res.end();
     });
@@ -207,8 +207,8 @@ async function main() {
         res.status(HttpStatus.OK);
         res.type('application/xml; charset=utf-8');
         res.write(Mustache.render(bundles.getSitemapXml(), {
-            HOME_URI: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
-            HOME_LAST_MOD: new Date().toISOString()
+            EXTERNAL_ORIGIN_WITH_SUBDOMAIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
+            LAST_MOD: new Date().toISOString()
         }));
         res.end();
     });

@@ -1,1 +1,1 @@
-Sitemap: {{{ HOME_URI }}}/sitemap.xml
+Sitemap: {{{ EXTERNAL_ORIGIN_WITH_SUBDOMAIN }}}/sitemap.xml

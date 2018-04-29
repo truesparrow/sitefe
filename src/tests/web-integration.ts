@@ -33,7 +33,7 @@ describe('Large scale SEO & Web integration', () => {
         });
     });
 
-    describe('robots.txt', () => {
+    describe.only('robots.txt', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -48,7 +48,7 @@ describe('Large scale SEO & Web integration', () => {
         })
     });
 
-    describe.only('humans.txt', () => {
+    describe('humans.txt', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
