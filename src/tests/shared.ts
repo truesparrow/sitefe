@@ -17,6 +17,7 @@ export const STYLE_PRIMARY_COLOR = '#1498d5';
 interface PageInfo {
     path: string;
     title: string;
+    skipCanonical?: boolean;
     failOnStatusCode?: boolean;
 }
 
@@ -41,6 +42,7 @@ export const ALL_EVENT1_PAGES: PageInfo[] = [
     {
         path: 'inexistent-page',
         title: 'Page Not Found',
+        skipCanonical: true,
         failOnStatusCode: false
     },
 ];

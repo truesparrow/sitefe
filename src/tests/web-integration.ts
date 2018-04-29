@@ -183,7 +183,7 @@ Contact: ${CONTACT_EMAIL}
     });
 
     describe.only('Page-level machine information', () => {
-        for (const { path, title, failOnStatusCode } of ALL_EVENT1_PAGES) {
+        for (const { path, title, failOnStatusCode, skipCanonical } of ALL_EVENT1_PAGES) {
             it(`/${path}`, () => {
                 cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                     cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -195,6 +195,9 @@ Contact: ${CONTACT_EMAIL}
                         // Page specific generic web configuration
                         cy.title().should('equal', title);
                         cy.get('head > meta[name=description]').should('have.attr', 'content', title);
+                        if (!skipCanonical) {
+                            cy.get('head > link[rel=canonical]').should('have.attr', 'href', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}${path}`);
+                        }
                     });
                 });
             });

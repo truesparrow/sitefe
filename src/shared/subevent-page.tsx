@@ -24,6 +24,7 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
                     <Helmet>
                         <title>{pageTitle}</title>
                         <meta name="description" content={pageTitle} />
+                        <link rel="canonical" href={`${config.EXTERNAL_ORIGIN}/${subEvent.slug}`} />
                     </Helmet>
                     <h2 className="subevent-page-title">
                         <span className={'subevent-page-glyph ' + subEvent.display.icon}></span>

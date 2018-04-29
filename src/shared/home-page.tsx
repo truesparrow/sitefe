@@ -47,6 +47,7 @@ class _HomePage extends React.Component<Props, State> {
                 <Helmet>
                     <title>{event.title}</title>
                     <meta name="description" content={event.title} />
+                    <link rel="canonical" href={`${config.EXTERNAL_ORIGIN}/`} />
                 </Helmet>
                 {subEventNavLinks}
             </div>

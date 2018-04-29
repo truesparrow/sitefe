@@ -13,8 +13,6 @@ import * as services from './services'
 import { subEventPage } from './subevent-page'
 import { EventState, OpState, StatePart } from './store'
 
-import * as text from './app-frame.text'
-
 
 interface AppFrameCarouselProps {
     event: Event;
