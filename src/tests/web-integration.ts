@@ -12,8 +12,44 @@ describe('Large scale SEO & Web integration', () => {
         cy.clearOutData();
     });
 
-    describe('favicon.ico', () => {
+    describe.only('favicon.ico', () => {
         it('Should be referenced by pages', () => {
+            cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+                cy.addEvent(sessionToken, 'event1.json').then(event => {
+                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT));
+                    runTest();
+
+                    for (const subEventDetail of event.subEventDetails) {
+                        cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEventDetail.slug);
+                        runTest();
+                    }
+
+                    function runTest() {
+                        cy.get('head > link[rel=apple-touch-icon]')
+                            .should('have.attr', 'sizes', '180x180')
+                            .should('have.attr', 'href', '/real/client/apple-touch-icon.png');
+                        cy.get('head > link[rel=icon][sizes=32x32]')
+                            .should('have.attr', 'type', 'image/png')
+                            .should('have.attr', 'href', '/real/client/favicon-32x32.png');
+                        cy.get('head > link[rel=icon][sizes=16x16]')
+                            .should('have.attr', 'type', 'image/png')
+                            .should('have.attr', 'href', '/real/client/favicon-16x16.png');
+                        cy.get('head > link[rel=mask-icon]')
+                            .should('have.attr', 'href', '/real/client/safari-pinned-tab.svg')
+                            .should('have.attr', 'color', '#5bbad5');
+                        cy.get('head > link[rel=\'shortcut icon\']')
+                            .should('have.attr', 'href', '/real/client/favicon.ico');
+                        cy.get('head > meta[name=msapplication-TileColor]')
+                            .should('have.attr', 'content', '#1498d5');
+                        cy.get('head > meta[name=theme-color]')
+                            .should('have.attr', 'content', '#1498d5');
+                        cy.get('head > link[rel=manifest]')
+                            .should('have.attr', 'href', '/site.webmanifest');
+                        cy.get('head > meta[name=msapplication-config]')
+                            .should('have.attr', 'content', '/browserconfig.xml');
+                    }
+                });
+            });
             // TODO
         });
 
@@ -66,7 +102,7 @@ Contact: ${CONTACT_EMAIL}
         })
     });
 
-    describe.only('sitemap.xml', () => {
+    describe('sitemap.xml', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {

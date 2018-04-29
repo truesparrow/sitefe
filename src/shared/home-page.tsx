@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -43,6 +44,10 @@ class _HomePage extends React.Component<Props, State> {
 
         return (
             <div className="home-page">
+                <Helmet>
+                    <title>{event.title}</title>
+                    <meta name="description" content={event.title} />
+                </Helmet>
                 {subEventNavLinks}
             </div>
         );
