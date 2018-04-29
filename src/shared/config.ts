@@ -19,6 +19,8 @@ const externalOriginProtocolEnd = EXTERNAL_ORIGIN.indexOf('://') + 3;
 const externalOriginProtocol = EXTERNAL_ORIGIN.substring(0, externalOriginProtocolEnd);
 const externalOriginWithoutProtocol = EXTERNAL_ORIGIN.substring(externalOriginProtocolEnd);
 export const EXTERNAL_ORIGIN_WITH_SUBDOMAIN = (subDomain: string) => `${externalOriginProtocol}${subDomain}.${externalOriginWithoutProtocol}`;
+export const CONTACT_AUTHORS = 'The TruSpar Team';
+export const CONTACT_EMAIL = getFromEnv('CONTACT_EMAIL');
 export const STYLE_APPLICATION_NAME = 'TruSpar';
 export const STYLE_PRIMARY_COLOR = '#1498d5';
 export const STYLE_GRAY_COLOR = '#5bbad5';

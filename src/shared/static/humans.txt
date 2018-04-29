@@ -1,3 +1,3 @@
 /* Team */
-Programmer: CHM SQRT2 Team
-Contact: contact@chm-sqrt2.com
+Programmer: {{{ CONTACT_AUTHORS }}}
+Contact: {{{ CONTACT_EMAIL }}}

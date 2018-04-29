@@ -194,7 +194,10 @@ async function main() {
     siteInfoRouter.get('/humans.txt', (_req: Request, res: express.Response) => {
         res.status(HttpStatus.OK);
         res.type('.txt');
-        res.write(bundles.getHumansTxt());
+        res.write(Mustache.render(bundles.getHumansTxt(), {
+            CONTACT_AUTHORS: config.CONTACT_AUTHORS,
+            CONTACT_EMAIL: config.CONTACT_EMAIL
+        }));
         res.end();
     });
 

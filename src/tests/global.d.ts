@@ -11,7 +11,7 @@ declare global {
             loginAsUser(userFixture: string): Chainable<[SessionToken, Session, any]>;
             addEvent(sessionToken: SessionToken, userFixture: string): Chainable<Event>;
             visitSiteFe(url: string, notInitial?: boolean): Chainable<Subject>;
-            requestSiteFe(url: string): Chainable<Subject>;
+            requestSiteFe(url: string): Chainable<Response>;
         }
     }
 }

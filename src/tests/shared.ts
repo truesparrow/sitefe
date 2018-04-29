@@ -8,3 +8,6 @@ export const ORIGIN_DOMAIN = Cypress.env('HOST');
 export const ORIGIN_PORT = Cypress.env('PORT');
 export const ORIGIN = `http://${ORIGIN_DOMAIN}:${ORIGIN_PORT}`;
 export const ORIGIN_DOMAIN_AND_PORT = `${ORIGIN_DOMAIN}:${ORIGIN_PORT}`;
+
+export const CONTACT_AUTHORS = 'The TruSpar Team';
+export const CONTACT_EMAIL = Cypress.env('CONTACT_EMAIL');

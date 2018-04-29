@@ -3,7 +3,7 @@ import * as HttpStatus from 'http-status-codes'
 
 import { Env } from '@truesparrow/common-js'
 
-import { ORIGIN_DOMAIN_AND_PORT } from './shared'
+import { CONTACT_AUTHORS, CONTACT_EMAIL, ORIGIN_DOMAIN_AND_PORT } from './shared'
 
 
 describe('Large scale SEO & Web integration', () => {
@@ -33,7 +33,7 @@ describe('Large scale SEO & Web integration', () => {
         });
     });
 
-    describe.only('robots.txt', () => {
+    describe('robots.txt', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -48,11 +48,18 @@ describe('Large scale SEO & Web integration', () => {
         })
     });
 
-    describe('humans.txt', () => {
+    describe.only('humans.txt', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
-                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'humans.txt');
+                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'humans.txt').then(resp => {
+                        expect(resp.status).to.eq(HttpStatus.OK);
+                        expect(resp.headers['content-type']).to.eq('text/plain; charset=utf-8');
+                        expect(resp.body).to.eql(`/* Team */
+Programmer: ${CONTACT_AUTHORS}
+Contact: ${CONTACT_EMAIL}
+`);
+                    });
                 });
             });
         })
