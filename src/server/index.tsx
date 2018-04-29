@@ -128,6 +128,7 @@ async function main() {
             PAGE_TITLE_HTML: helmetData.title,
             PAGE_META_HTML: helmetData.meta,
             PAGE_LINK_HTML: helmetData.link,
+            CONTACT_AUTHORS: config.CONTACT_AUTHORS,
             STYLE_PRIMARY_COLOR: config.STYLE_PRIMARY_COLOR,
             STYLE_GRAY_COLOR: config.STYLE_GRAY_COLOR,
             APP_HTML: appHtml,

@@ -2,14 +2,19 @@
 <html>
     <head>
         <meta charset="utf-8">
+
+        <!-- Page specific generic web configuration -->
+
         {{{ PAGE_TITLE_HTML }}}
-
-        <meta name="keywords" content="blog, publishing, tech, it, developer, programmer, programming">
-        <meta name="author" content="CHM SQRT2 Team">
-
         {{{ PAGE_META_HTML }}}
-
         {{{ PAGE_LINK_HTML }}}
+
+        <!-- Common generic web configuration  -->
+
+        <meta name="author" content="{{{ CONTACT_AUTHORS }}}">
+        <link rel="author" href="/humans.txt" />
+
+        <!-- Common configuration -->
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -23,12 +28,17 @@
         <meta name="msapplication-config" content="/browserconfig.xml">
         <meta name="theme-color" content="{{{ STYLE_PRIMARY_COLOR }}}">
 
+        <!-- Essential resource loading -->
+
         <link rel="stylesheet" href="/real/client/client.css" media="screen">
-        <link rel="author" href="/humans.txt" />
     </head>
 
     <body>
+        <!-- Application mount point -->
+
         <div id="app">{{{ APP_HTML }}}</div>
+
+        <!-- Important resource loading -->
 
         <script>
          window.__TRUESPARROW_CLIENT_CONFIG = {{{ CLIENT_CONFIG }}};
@@ -37,5 +47,7 @@
         <script>{{{ WEBPACK_MANIFEST_JS }}}</script>
         <script src="/real/client/vendor.bundle.js"></script>
         <script src="/real/client/client.js"></script>
+
+        <!-- Secondary resouce loading -->
     </body>
 </html>
