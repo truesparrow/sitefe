@@ -17,6 +17,7 @@ export const STYLE_PRIMARY_COLOR = '#1498d5';
 interface PageInfo {
     path: string;
     title: string;
+    robotsMeta: string;
     skipCanonical?: boolean;
     failOnStatusCode?: boolean;
 }
@@ -25,23 +26,28 @@ interface PageInfo {
 export const ALL_EVENT1_PAGES: PageInfo[] = [
     {
         path: '',
-        title: 'Our wedding'
+        title: 'Our wedding',
+        robotsMeta: 'index,follow'
     },
     {
         path: 'civil-ceremony',
-        title: 'Our wedding - Civil Ceremony'
+        title: 'Our wedding - Civil Ceremony',
+        robotsMeta: 'index,follow'
     },
     {
         path: 'religious-ceremony',
-        title: 'Our wedding - Religious Ceremony'
+        title: 'Our wedding - Religious Ceremony',
+        robotsMeta: 'index,follow'
     },
     {
         path: 'reception',
-        title: 'Our wedding - Reception'
+        title: 'Our wedding - Reception',
+        robotsMeta: 'index,follow'
     },
     {
         path: 'inexistent-page',
         title: 'Page Not Found',
+        robotsMeta: 'noindex,nofollow',
         skipCanonical: true,
         failOnStatusCode: false
     },

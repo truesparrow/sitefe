@@ -20,6 +20,7 @@ export const NotFoundPage = () => {
                     <Helmet>
                         <title>{text.pageTitle[config.LANG()]}</title>
                         <meta name="description" content={text.pageDescription[config.LANG()]} />
+                        <meta name="robots" content="noindex,nofollow" />
                     </Helmet>
                     <h1>{text.notFound[config.LANG()]}</h1>
                 </div>

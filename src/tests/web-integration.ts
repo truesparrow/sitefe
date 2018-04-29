@@ -182,8 +182,8 @@ Contact: ${CONTACT_EMAIL}
         });
     });
 
-    describe.only('Page-level machine information', () => {
-        for (const { path, title, failOnStatusCode, skipCanonical } of ALL_EVENT1_PAGES) {
+    describe('Page-level machine information', () => {
+        for (const { path, title, robotsMeta, failOnStatusCode, skipCanonical } of ALL_EVENT1_PAGES) {
             it(`/${path}`, () => {
                 cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                     cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -202,6 +202,9 @@ Contact: ${CONTACT_EMAIL}
                         // Common generic web configuration
                         cy.get('head > meta[name=author]').should('have.attr', 'content', 'The TruSpar Team');
                         cy.get('head > link[rel=author]').should('have.attr', 'href', '/humans.txt');
+
+                        // Robots configuration
+                        cy.get('head > meta[name=robots]').should('have.attr', 'content', robotsMeta);
                     });
                 });
             });
