@@ -198,6 +198,10 @@ Contact: ${CONTACT_EMAIL}
                         if (!skipCanonical) {
                             cy.get('head > link[rel=canonical]').should('have.attr', 'href', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}${path}`);
                         }
+
+                        // Common generic web configuration
+                        cy.get('head > meta[name=author]').should('have.attr', 'content', 'The TruSpar Team');
+                        cy.get('head > link[rel=author]').should('have.attr', 'href', '/humans.txt');
                     });
                 });
             });
