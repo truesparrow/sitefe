@@ -12,3 +12,35 @@ export const ORIGIN_DOMAIN_AND_PORT = `${ORIGIN_DOMAIN}:${ORIGIN_PORT}`;
 export const CONTACT_AUTHORS = 'The TruSpar Team';
 export const CONTACT_EMAIL = Cypress.env('CONTACT_EMAIL');
 export const STYLE_PRIMARY_COLOR = '#1498d5';
+
+
+interface PageInfo {
+    path: string;
+    title: string;
+    failOnStatusCode?: boolean;
+}
+
+
+export const ALL_EVENT1_PAGES: PageInfo[] = [
+    {
+        path: '',
+        title: 'Our wedding'
+    },
+    {
+        path: 'civil-ceremony',
+        title: 'Our wedding - Civil Ceremony'
+    },
+    {
+        path: 'religious-ceremony',
+        title: 'Our wedding - Religious Ceremony'
+    },
+    {
+        path: 'reception',
+        title: 'Our wedding - Reception'
+    },
+    {
+        path: 'inexistent-page',
+        title: 'Page Not Found',
+        failOnStatusCode: false
+    },
+];

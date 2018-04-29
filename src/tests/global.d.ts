@@ -10,7 +10,7 @@ declare global {
             clearOutData(): Chainable<Response>;
             loginAsUser(userFixture: string): Chainable<[SessionToken, Session, any]>;
             addEvent(sessionToken: SessionToken, userFixture: string): Chainable<Event>;
-            visitSiteFe(url: string, notInitial?: boolean): Chainable<Subject>;
+            visitSiteFe(url: string, options?: any, notInitial?: boolean): Chainable<Subject>;
             requestSiteFe(url: string): Chainable<Response>;
         }
     }

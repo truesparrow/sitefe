@@ -51,7 +51,7 @@ describe('Cross-cutting concerns', () => {
                     const sessionTokenRaw = JSONCookie(decodeURIComponent((cookie as any).value));
                     const sessionToken = sessionTokenMarshaller.extract(sessionTokenRaw);
 
-                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'civil-ceremony', true);
+                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'civil-ceremony', {}, true);
                     cy.getCookie(SESSION_TOKEN_COOKIE_NAME).then(cookie2 => {
                         const sessionTokenRaw2 = JSONCookie(decodeURIComponent((cookie2 as any).value));
                         const sessionToken2 = sessionTokenMarshaller.extract(sessionTokenRaw2);
@@ -74,7 +74,7 @@ describe('Cross-cutting concerns', () => {
                     cy.loginAsUser('user2.json').then(([sessionToken2, _session2, _data2]) => {
                         cy.addEvent(sessionToken2, 'event2.json').then(event2 => {
 
-                            cy.visitSiteFe(event2.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT), true);
+                            cy.visitSiteFe(event2.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT), {}, true);
                             cy.getCookie(SESSION_TOKEN_COOKIE_NAME).then(cookie2 => {
                                 const sessionTokenRaw2 = JSONCookie(decodeURIComponent((cookie2 as any).value));
                                 const sessionToken2 = sessionTokenMarshaller.extract(sessionTokenRaw2);

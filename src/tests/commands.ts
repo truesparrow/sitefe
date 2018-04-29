@@ -75,7 +75,7 @@ function addEvent(sessionToken: SessionToken, eventFixture: string) {
     });
 }
 
-function visitSiteFe(url: string, notInitial?: boolean) {
+function visitSiteFe(url: string, options?: any, notInitial?: boolean) {
     const theUrl = new URL(url);
     const subdomain = theUrl.hostname.split('.')[0];
     const rest = theUrl.hostname.split('.').splice(1).join('.');
@@ -84,7 +84,7 @@ function visitSiteFe(url: string, notInitial?: boolean) {
         cy.clearCookies();
     }
     cy.setCookie('truesparrow-subdomain', subdomain, { domain: rest });
-    cy.visit(restUrl);
+    cy.visit(restUrl, options);
 }
 
 function requestSiteFe(url: string) {

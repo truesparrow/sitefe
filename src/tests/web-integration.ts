@@ -4,7 +4,13 @@ import * as HttpStatus from 'http-status-codes'
 
 import { Env } from '@truesparrow/common-js'
 
-import { CONTACT_AUTHORS, CONTACT_EMAIL, ORIGIN_DOMAIN_AND_PORT, STYLE_PRIMARY_COLOR } from './shared'
+import {
+    ALL_EVENT1_PAGES,
+    CONTACT_AUTHORS,
+    CONTACT_EMAIL,
+    ORIGIN_DOMAIN_AND_PORT,
+    STYLE_PRIMARY_COLOR
+} from './shared'
 
 
 describe('Large scale SEO & Web integration', () => {
@@ -13,18 +19,11 @@ describe('Large scale SEO & Web integration', () => {
     });
 
     describe('favicon.ico', () => {
-        it('Should be referenced by pages', () => {
-            cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
-                cy.addEvent(sessionToken, 'event1.json').then(event => {
-                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT));
-                    runTest();
-
-                    for (const subEventDetail of event.subEventDetails) {
-                        cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEventDetail.slug);
-                        runTest();
-                    }
-
-                    function runTest() {
+        for (const { path, failOnStatusCode } of ALL_EVENT1_PAGES) {
+            it(`/${path} should reference favicons`, () => {
+                cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+                    cy.addEvent(sessionToken, 'event1.json').then(event => {
+                        cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + path, { failOnStatusCode: failOnStatusCode == undefined ? true : failOnStatusCode });
                         cy.get('head > link[rel=apple-touch-icon]')
                             .should('have.attr', 'sizes', '180x180')
                             .should('have.attr', 'href', '/real/client/apple-touch-icon.png');
@@ -47,11 +46,10 @@ describe('Large scale SEO & Web integration', () => {
                             .should('have.attr', 'href', '/site.webmanifest');
                         cy.get('head > meta[name=msapplication-config]')
                             .should('have.attr', 'content', '/browserconfig.xml');
-                    }
+                    });
                 });
             });
-            // TODO
-        });
+        }
 
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
@@ -184,22 +182,22 @@ Contact: ${CONTACT_EMAIL}
         });
     });
 
-    it.only('Page-level machine information', () => {
-        cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
-            cy.addEvent(sessionToken, 'event1.json').then(event => {
-                cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT));
-                runTest();
+    describe.only('Page-level machine information', () => {
+        for (const { path, title, failOnStatusCode } of ALL_EVENT1_PAGES) {
+            it(`/${path}`, () => {
+                cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+                    cy.addEvent(sessionToken, 'event1.json').then(event => {
+                        cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + path, { failOnStatusCode: failOnStatusCode == undefined ? true : failOnStatusCode });
 
-                for (const subEventDetail of event.subEventDetails) {
-                    cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + subEventDetail.slug);
-                    runTest();
-                }
+                        // Language
+                        cy.get('html').should('have.attr', 'lang', 'en');
 
-                function runTest() {
-                    // Language
-                    cy.get('html').should('have.attr', 'lang', 'en');
-                }
+                        // Page specific generic web configuration
+                        cy.title().should('equal', title);
+                        cy.get('head > meta[name=description]').should('have.attr', 'content', title);
+                    });
+                });
             });
-        });
+        }
     });
 });

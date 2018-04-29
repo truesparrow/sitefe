@@ -1,16 +1,18 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import { NavLink } from 'react-router-dom'
 
-import { SubEventDetails } from '@truesparrow/content-sdk-js'
+import { Event, SubEventDetails } from '@truesparrow/content-sdk-js'
 
 import * as config from './config'
 
 import * as text from './subevent-page.text'
 
 
-export function subEventPage(subEvent: SubEventDetails) {
+export function subEventPage(event: Event, subEvent: SubEventDetails) {
     return class extends React.PureComponent<{}, {}> {
         render() {
+            const pageTitle = `${event.title} - ${subEvent.title[config.LANG()]}`;
             const addressEncoded = encodeURIComponent(subEvent.address);
 
             return (
@@ -19,6 +21,10 @@ export function subEventPage(subEvent: SubEventDetails) {
                     style={{
                         backgroundColor: subEvent.display.color
                     }}>
+                    <Helmet>
+                        <title>{pageTitle}</title>
+                        <meta name="description" content={pageTitle} />
+                    </Helmet>
                     <h2 className="subevent-page-title">
                         <span className={'subevent-page-glyph ' + subEvent.display.icon}></span>
                         <span>

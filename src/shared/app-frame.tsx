@@ -137,7 +137,6 @@ class _AppFrame extends React.Component<Props, {}> {
     render() {
         const helmet =
             <Helmet>
-                <title>{text.pageTitle[config.LANG()]}</title>
             </Helmet>;
 
         if (this.props.isLoading) {
@@ -159,11 +158,6 @@ class _AppFrame extends React.Component<Props, {}> {
         } else {
             const event = this.props.event as Event;
 
-            const betterHelmet =
-                <Helmet>
-                    <title>{event.title}</title>
-                </Helmet>;
-
             const subRoutes = event.subEventDetails
                 .filter(subEvent => subEvent.haveEvent)
                 .map(subEvent => {
@@ -172,13 +166,12 @@ class _AppFrame extends React.Component<Props, {}> {
                             key={subEvent.slug}
                             exact
                             path={`/${subEvent.slug}`}
-                            component={subEventPage(subEvent)} />
+                            component={subEventPage(event, subEvent)} />
                     );
                 });
 
             return (
                 <div className="app-frame">
-                    {betterHelmet}
                     <AppFrameCarousel event={event} />
                     <Switch>
                         <Route exact path="/" component={HomePage} />

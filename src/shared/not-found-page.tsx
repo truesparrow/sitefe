@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import { Route } from 'react-router-dom'
 import * as HttpStatus from 'http-status-codes'
 
@@ -16,6 +17,10 @@ export const NotFoundPage = () => {
 
             return (
                 <div>
+                    <Helmet>
+                        <title>{text.pageTitle[config.LANG()]}</title>
+                        <meta name="description" content={text.pageDescription[config.LANG()]} />
+                    </Helmet>
                     <h1>{text.notFound[config.LANG()]}</h1>
                 </div>
             )
