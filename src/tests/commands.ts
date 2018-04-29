@@ -93,7 +93,7 @@ function requestSiteFe(url: string) {
     const rest = theUrl.hostname.split('.').splice(1).join('.');
     const restUrl = url.replace(`${subdomain}.`, '');
     cy.setCookie('truesparrow-subdomain', subdomain, { domain: rest });
-    cy.request(restUrl);
+    return cy.request(restUrl);
 }
 
 

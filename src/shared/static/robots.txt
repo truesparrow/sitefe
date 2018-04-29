@@ -1,3 +1,1 @@
 Sitemap: {{{ HOME_URI }}}/sitemap.xml
-User-agent: *
-Disallow: /admin
