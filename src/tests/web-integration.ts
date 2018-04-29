@@ -3,7 +3,7 @@ import * as HttpStatus from 'http-status-codes'
 
 import { Env } from '@truesparrow/common-js'
 
-import { CONTACT_AUTHORS, CONTACT_EMAIL, ORIGIN_DOMAIN_AND_PORT } from './shared'
+import { CONTACT_AUTHORS, CONTACT_EMAIL, ORIGIN_DOMAIN_AND_PORT, STYLE_PRIMARY_COLOR } from './shared'
 
 
 describe('Large scale SEO & Web integration', () => {
@@ -33,7 +33,7 @@ describe('Large scale SEO & Web integration', () => {
         });
     });
 
-    describe.only('robots.txt', () => {
+    describe('robots.txt', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -77,15 +77,57 @@ Contact: ${CONTACT_EMAIL}
 
     describe('browserconfig.xml', () => {
         it('Should exist', () => {
-            cy.request('/browserconfig.xml');
+            cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
+                cy.addEvent(sessionToken, 'event1.json').then(event => {
+                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'browserconfig.xml').then(resp => {
+                        expect(resp.status).to.eq(HttpStatus.OK);
+                        expect(resp.headers['content-type']).to.eq('application/xml; charset=utf-8');
+                        expect(resp.body).to.contain(`<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square150x150logo src="/real/client/mstile-150x150.png"/>
+            <square310x310logo src="/real/client/mstile-310x310.png"/>
+            <TileColor>${STYLE_PRIMARY_COLOR}</TileColor>
+        </tile>
+    </msapplication>
+</browserconfig>
+`);
+                    });
+                });
+            });
         });
     });
 
-    describe('site.webmanifest', () => {
+    describe.only('site.webmanifest', () => {
         it('Should exist', () => {
             cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                 cy.addEvent(sessionToken, 'event1.json').then(event => {
-                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'site.webmanifest');
+                    cy.requestSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + 'site.webmanifest').then(resp => {
+                        expect(resp.status).to.eq(HttpStatus.OK);
+                        expect(resp.headers['content-type']).to.eq('application/manifest+json; charset=utf-8');
+                        expect(resp.body).to.eql(`{
+    "name": "${event.title}",
+    "short_name": "${event.title}",
+    "icons": [
+        {
+            "src": "/real/client/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/real/client/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "${STYLE_PRIMARY_COLOR}",
+    "background_color": "#ffffff",
+    "start_url": "${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}",
+    "display": "standalone"
+}
+`);
+                    });
                 });
             });
         });

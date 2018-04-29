@@ -232,9 +232,9 @@ async function main() {
         }
 
         res.status(HttpStatus.OK);
-        res.type('.txt');
+        res.type('application/manifest+json; charset=utf-8');
         res.write(Mustache.render(bundles.getSiteWebManifest(), {
-            EXTERNAL_ORIGIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain),
+            EXTERNAL_ORIGIN_WITH_SUBDOMAIN: config.EXTERNAL_ORIGIN_WITH_SUBDOMAIN(subDomain) + '/', // El hack-o
             STYLE_APPLICATION_NAME: event == null ? config.STYLE_APPLICATION_NAME : event.title,
             STYLE_PRIMARY_COLOR: config.STYLE_PRIMARY_COLOR
         }));

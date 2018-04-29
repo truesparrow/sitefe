@@ -11,3 +11,4 @@ export const ORIGIN_DOMAIN_AND_PORT = `${ORIGIN_DOMAIN}:${ORIGIN_PORT}`;
 
 export const CONTACT_AUTHORS = 'The TruSpar Team';
 export const CONTACT_EMAIL = Cypress.env('CONTACT_EMAIL');
+export const STYLE_PRIMARY_COLOR = '#1498d5';

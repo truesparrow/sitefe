@@ -15,6 +15,6 @@
     ],
     "theme_color": "{{{ STYLE_PRIMARY_COLOR }}}",
     "background_color": "#ffffff",
-    "start_url": "{{{ EXTERNAL_ORIGIN }}}",
+    "start_url": "{{{ EXTERNAL_ORIGIN_WITH_SUBDOMAIN }}}",
     "display": "standalone"
 }
