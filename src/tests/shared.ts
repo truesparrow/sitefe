@@ -13,6 +13,8 @@ export const CONTACT_AUTHORS = 'The TruSpar Team';
 export const CONTACT_EMAIL = Cypress.env('CONTACT_EMAIL');
 export const STYLE_PRIMARY_COLOR = '#1498d5';
 
+export const FACEBOOK_APP_ID = String(Cypress.env('FACEBOOK_APP_ID'));
+
 
 interface PageInfo {
     path: string;

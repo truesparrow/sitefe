@@ -14,11 +14,13 @@ export const NAME: string = 'sitefe';
 export const HOST: string = getFromEnv('HOST');
 export const PORT: number = parseInt(getFromEnv('PORT'), 10);
 export const INTERNAL_ORIGIN: string = `http://${HOST}:${PORT}`;
+export const EXTERNAL_HOST: string = getFromEnv('EXTERNAL_HOST');
 export const EXTERNAL_ORIGIN: string = getFromEnv('EXTERNAL_ORIGIN');
 const externalOriginProtocolEnd = EXTERNAL_ORIGIN.indexOf('://') + 3;
 const externalOriginProtocol = EXTERNAL_ORIGIN.substring(0, externalOriginProtocolEnd);
 const externalOriginWithoutProtocol = EXTERNAL_ORIGIN.substring(externalOriginProtocolEnd);
 export const EXTERNAL_ORIGIN_WITH_SUBDOMAIN = (subDomain: string) => `${externalOriginProtocol}${subDomain}.${externalOriginWithoutProtocol}`;
+export const SEO_TWITTER_HANDLE = '@trusparevents';
 export const CONTACT_AUTHORS = 'The TruSpar Team';
 export const CONTACT_EMAIL = getFromEnv('CONTACT_EMAIL');
 export const STYLE_APPLICATION_NAME = 'TruSpar';
@@ -30,6 +32,7 @@ export const IDENTITY_SERVICE_PORT: number = parseInt(getFromEnv('IDENTITY_SERVI
 export const CONTENT_SERVICE_HOST: string = getFromEnv('CONTENT_SERVICE_HOST');
 export const CONTENT_SERVICE_PORT: number = parseInt(getFromEnv('CONTENT_SERVICE_PORT'), 10);
 
+export const FACEBOOK_APP_ID = getFromEnv('FACEBOOK_APP_ID');
 export const GOOGLE_MAPS_API_KEY: string = getFromEnv('GOOGLE_MAPS_API_KEY');
 
 export const CLS_NAMESPACE_NAME: string = 'truesparrow.request';

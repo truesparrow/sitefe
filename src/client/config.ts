@@ -16,13 +16,16 @@ export const CONTEXT: Context = Context.Client;
 
 export const NAME: string = 'sitefe';
 export const INTERNAL_ORIGIN: string = clientConfig.internalOrigin;
+export const EXTERNAL_HOST: string = clientConfig.externalHost;
 export const EXTERNAL_ORIGIN: string = clientConfig.externalOriginWithSubDomain;
 export const SUBDOMAIN: string = clientConfig.subDomain;
+export const SEO_TWITTER_HANDLE: string = clientConfig.seoTwitterHandle;
 export const STYLE_APPLICATION_NAME: string = clientConfig.styleApplicationName;
 
 export const CONTENT_SERVICE_HOST: string = clientConfig.contentServiceHost;
 export const CONTENT_SERVICE_PORT: number = clientConfig.contentServicePort;
 
+export const FACEBOOK_APP_ID: string = clientConfig.facebookAppId;
 export const GOOGLE_MAPS_API_KEY: string = clientConfig.googleMapsApiKey;
 
 

@@ -2,7 +2,8 @@ import {
     MarshalEnum,
     MarshalFrom,
     MarshalWith,
-    OptionalOf
+    OptionalOf,
+    StringMarshaller
 } from 'raynor'
 import * as r from 'raynor'
 
@@ -18,11 +19,17 @@ export class ClientConfig {
     @MarshalWith(r.WebUriMarshaller)
     internalOrigin: string;
 
+    @MarshalWith(r.StringMarshaller)
+    externalHost: string;
+
     @MarshalWith(r.WebUriMarshaller)
     externalOriginWithSubDomain: string;
 
     @MarshalWith(SubDomainMarshaller)
     subDomain: string;
+
+    @MarshalWith(StringMarshaller)
+    seoTwitterHandle: string;
 
     @MarshalWith(r.StringMarshaller)
     styleApplicationName: string;
@@ -32,6 +39,9 @@ export class ClientConfig {
 
     @MarshalWith(r.PositiveIntegerMarshaller)
     contentServicePort: number;
+
+    @MarshalWith(r.StringMarshaller)
+    facebookAppId: string;
 
     @MarshalWith(r.StringMarshaller)
     googleMapsApiKey: string;

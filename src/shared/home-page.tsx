@@ -7,6 +7,7 @@ import { Event } from '@truesparrow/content-sdk-js'
 
 import * as config from './config'
 import { EventState, OpState } from './store'
+import { FacebookOpenGraph, TwitterCard } from './web-metadata'
 
 // import * as text from './home-page.text'
 
@@ -22,6 +23,7 @@ interface State {
 class _HomePage extends React.Component<Props, State> {
     render() {
         const { event } = this.props;
+        const realLink = event.homeUri(config.ENV, config.EXTERNAL_HOST);
 
         const subEventNavLinks = event.subEventDetails
             .filter(subEvent => subEvent.haveEvent)
@@ -47,9 +49,18 @@ class _HomePage extends React.Component<Props, State> {
                 <Helmet>
                     <title>{event.title}</title>
                     <meta name="description" content={event.title} />
-                    <link rel="canonical" href={`${config.EXTERNAL_ORIGIN}/`} />
+                    <link rel="canonical" href={realLink} />
                     <meta name="robots" content="index,follow" />
                 </Helmet>
+                <FacebookOpenGraph
+                    host={realLink}
+                    realLink={realLink}
+                    title={event.title}
+                    description={event.title} />
+                <TwitterCard
+                    host={realLink}
+                    title={event.title}
+                    description={event.title} />
                 {subEventNavLinks}
             </div>
         );

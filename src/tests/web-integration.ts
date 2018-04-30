@@ -8,6 +8,7 @@ import {
     ALL_EVENT1_PAGES,
     CONTACT_AUTHORS,
     CONTACT_EMAIL,
+    FACEBOOK_APP_ID,
     ORIGIN_DOMAIN_AND_PORT,
     STYLE_PRIMARY_COLOR
 } from './shared'
@@ -187,24 +188,50 @@ Contact: ${CONTACT_EMAIL}
             it(`/${path}`, () => {
                 cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                     cy.addEvent(sessionToken, 'event1.json').then(event => {
-                        cy.visitSiteFe(event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + path, { failOnStatusCode: failOnStatusCode == undefined ? true : failOnStatusCode });
+                        const thePath = event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT) + path;
+                        cy.visitSiteFe(thePath, { failOnStatusCode: failOnStatusCode == undefined ? true : failOnStatusCode });
 
                         // Language
+
                         cy.get('html').should('have.attr', 'lang', 'en');
 
                         // Page specific generic web configuration
+
                         cy.title().should('equal', title);
                         cy.get('head > meta[name=description]').should('have.attr', 'content', title);
                         if (!skipCanonical) {
-                            cy.get('head > link[rel=canonical]').should('have.attr', 'href', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}${path}`);
+                            cy.get('head > link[rel=canonical]').should('have.attr', 'href', thePath);
                         }
 
                         // Common generic web configuration
+
                         cy.get('head > meta[name=author]').should('have.attr', 'content', 'The TruSpar Team');
                         cy.get('head > link[rel=author]').should('have.attr', 'href', '/humans.txt');
 
                         // Robots configuration
+
                         cy.get('head > meta[name=robots]').should('have.attr', 'content', robotsMeta);
+
+                        if (!skipCanonical) {
+                            // Facebook OpenGraph
+
+                            cy.get('head > meta[property=\'og:url\']').should('have.attr', 'content', thePath);
+                            cy.get('head > meta[property=\'og:title\']').should('have.attr', 'content', title);
+                            cy.get('head > meta[property=\'og:description\']').should('have.attr', 'content', title);
+                            cy.get('head > meta[property=\'og:site_name\']').should('have.attr', 'content', 'TruSpar');
+                            cy.get('head > meta[property=\'og:image\']').should('have.attr', 'content', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}real/client/home-page-hero.jpg`);
+                            // cy.get('head > meta[property=\'og:locale\']').should('have.attr', 'content', 'en');
+                            cy.get('head > meta[property=\'fb:app_id\']').should('have.attr', 'content', FACEBOOK_APP_ID);
+
+                            // Twitter Card
+
+                            cy.get('head > meta[name=\'twitter:card\']').should('have.attr', 'content', 'summary');
+                            cy.get('head > meta[name=\'twitter:title\']').should('have.attr', 'content', title);
+                            cy.get('head > meta[name=\'twitter:description\']').should('have.attr', 'content', title);
+                            cy.get('head > meta[name=\'twitter:creator\']').should('have.attr', 'content', '@trusparevents');
+                            cy.get('head > meta[name=\'twitter:site\']').should('have.attr', 'content', '@trusparevents');
+                            cy.get('head > meta[name=\'twitter:image\']').should('have.attr', 'content', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}real/client/home-page-hero.jpg`);
+                        }
                     });
                 });
             });

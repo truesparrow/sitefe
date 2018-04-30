@@ -1,9 +1,11 @@
 import { Message, MessageWith0Arg } from '@truesparrow/common-js'
 
+import * as config from './config'
+
 
 export const siteName: MessageWith0Arg = {
-    en: 'TrueSparrow',
-    ro: 'TrueSparrow'
+    en: config.STYLE_APPLICATION_NAME,
+    ro: config.STYLE_APPLICATION_NAME
 };
 
 export const loading: Message = {

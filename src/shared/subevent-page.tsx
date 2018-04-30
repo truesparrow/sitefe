@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet'
 import { NavLink } from 'react-router-dom'
 
 import { Event, SubEventDetails } from '@truesparrow/content-sdk-js'
+import { FacebookOpenGraph, TwitterCard } from './web-metadata'
 
 import * as config from './config'
 
@@ -13,6 +14,8 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
     return class extends React.PureComponent<{}, {}> {
         render() {
             const pageTitle = `${event.title} - ${subEvent.title[config.LANG()]}`;
+            const host = event.homeUri(config.ENV, config.EXTERNAL_HOST);
+            const realLink = `${host}${subEvent.slug}`;
             const addressEncoded = encodeURIComponent(subEvent.address);
 
             return (
@@ -24,9 +27,18 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
                     <Helmet>
                         <title>{pageTitle}</title>
                         <meta name="description" content={pageTitle} />
-                        <link rel="canonical" href={`${config.EXTERNAL_ORIGIN}/${subEvent.slug}`} />
+                        <link rel="canonical" href={realLink} />
                         <meta name="robots" content="index,follow" />
                     </Helmet>
+                    <FacebookOpenGraph
+                        host={host}
+                        realLink={realLink}
+                        title={pageTitle}
+                        description={pageTitle} />
+                    <TwitterCard
+                        host={host}
+                        title={pageTitle}
+                        description={pageTitle} />
                     <h2 className="subevent-page-title">
                         <span className={'subevent-page-glyph ' + subEvent.display.icon}></span>
                         <span>
