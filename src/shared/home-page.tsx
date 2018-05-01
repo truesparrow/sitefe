@@ -7,7 +7,7 @@ import { Event } from '@truesparrow/content-sdk-js'
 
 import * as config from './config'
 import { EventState, OpState } from './store'
-import { FacebookOpenGraph, TwitterCard } from './web-metadata'
+import { FacebookOpenGraph, MicrodataEvent, TwitterCard } from './web-metadata'
 
 // import * as text from './home-page.text'
 
@@ -60,6 +60,12 @@ class _HomePage extends React.Component<Props, State> {
                 <TwitterCard
                     host={realLink}
                     title={event.title}
+                    pictureSet={event.pictureSet} />
+                <MicrodataEvent
+                    name={event.title}
+                    description={event.title}
+                    startDate={event.subEventDetails[0].dateAndTime}
+                    locationName={event.subEventDetails[0].address}
                     pictureSet={event.pictureSet} />
                 {subEventNavLinks}
             </div>

@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet'
 import { NavLink } from 'react-router-dom'
 
 import { Event, SubEventDetails } from '@truesparrow/content-sdk-js'
-import { FacebookOpenGraph, MicrodataBreadcrumbs, TwitterCard } from './web-metadata'
+import { FacebookOpenGraph, MicrodataBreadcrumbs, MicrodataEvent, TwitterCard } from './web-metadata'
 
 import * as config from './config'
 
@@ -38,6 +38,12 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
                     <TwitterCard
                         host={host}
                         title={pageTitle}
+                        pictureSet={event.pictureSet} />
+                    <MicrodataEvent
+                        name={pageTitle}
+                        description={event.title}
+                        startDate={subEvent.dateAndTime}
+                        locationName={subEvent.address}
                         pictureSet={event.pictureSet} />
                     <MicrodataBreadcrumbs
                         items={[{

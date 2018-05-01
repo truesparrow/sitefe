@@ -76,3 +76,32 @@ export function MicrodataBreadcrumbs(props: MicrodataBreadcrumnsProps) {
         </Helmet>
     );
 }
+
+interface MicrodataEventProps {
+    name: string;
+    description: string;
+    startDate: Date;
+    locationName: string;
+    pictureSet: PictureSet;
+}
+
+export function MicrodataEvent(props: MicrodataEventProps) {
+    return (
+        <Helmet>
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    '@context': 'http://schema.org',
+                    '@type': 'Event',
+                    'name': props.name,
+                    'description': props.description,
+                    'startDate': props.startDate.toISOString(),
+                    'location': {
+                        '@type': 'Place',
+                        'name': props.locationName
+                    },
+                    'image': props.pictureSet.pictures.map(p => p.mainImage.uri)
+                })}
+            </script>
+        </Helmet>
+    );
+}

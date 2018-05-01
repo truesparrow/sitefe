@@ -20,6 +20,8 @@ interface PageInfo {
     path: string;
     title: string;
     robotsMeta: string;
+    startDateStr?: string;
+    locationName?: string;
     skipCanonical?: boolean;
     failOnStatusCode?: boolean;
     breadcrumbName?: string;
@@ -30,25 +32,33 @@ export const ALL_EVENT1_PAGES: PageInfo[] = [
     {
         path: '',
         title: 'Our wedding',
-        robotsMeta: 'index,follow'
+        robotsMeta: 'index,follow',
+        startDateStr: '2018-03-13T12:54:16.721Z',
+        locationName: 'Bucharest City Hall, Bulevardul Regina Elisabeta, Bucharest, Romania'
     },
     {
         path: 'civil-ceremony',
         title: 'Our wedding - Civil Ceremony',
         robotsMeta: 'index,follow',
-        breadcrumbName: 'Civil Ceremony'
+        breadcrumbName: 'Civil Ceremony',
+        startDateStr: '2018-03-13T12:54:16.721Z',
+        locationName: 'Bucharest City Hall, Bulevardul Regina Elisabeta, Bucharest, Romania'
     },
     {
         path: 'religious-ceremony',
         title: 'Our wedding - Religious Ceremony',
         robotsMeta: 'index,follow',
-        breadcrumbName: 'Religious Ceremony'
+        breadcrumbName: 'Religious Ceremony',
+        startDateStr: '2018-03-13T12:54:16.721Z',
+        locationName: 'Biserica Icoanei, Strada Icoanei, Bucharest, Romania'
     },
     {
         path: 'reception',
         title: 'Our wedding - Reception',
         robotsMeta: 'index,follow',
-        breadcrumbName: 'Reception'
+        breadcrumbName: 'Reception',
+        startDateStr: '2018-03-13T12:54:16.721Z',
+        locationName: 'Scala Events, Bulevardul Mircea Eliade, Bucharest, Romania'
     },
     {
         path: 'inexistent-page',

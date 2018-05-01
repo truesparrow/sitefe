@@ -183,8 +183,8 @@ Contact: ${CONTACT_EMAIL}
         });
     });
 
-    describe.only('Page-level machine information', () => {
-        for (const { path, title, robotsMeta, failOnStatusCode, skipCanonical, breadcrumbName } of ALL_EVENT1_PAGES) {
+    describe('Page-level machine information', () => {
+        for (const { path, title, robotsMeta, startDateStr, locationName, failOnStatusCode, skipCanonical, breadcrumbName } of ALL_EVENT1_PAGES) {
             it(`/${path}`, () => {
                 cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                     cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -232,11 +232,38 @@ Contact: ${CONTACT_EMAIL}
                             cy.get('head > meta[name=\'twitter:creator\']').should('have.attr', 'content', '@trusparevents');
                             cy.get('head > meta[name=\'twitter:site\']').should('have.attr', 'content', '@trusparevents');
                             cy.get('head > meta[name=\'twitter:image\']').should('have.attr', 'content', 'http://localhost:10004/real/client/sparrow.jpg');
+
+                            // Event microdata
+
+                            cy.get('head > script[type=\'application/ld+json\']').first().should('exist');
+                            cy.get('head > script[type=\'application/ld+json\']').first().then($script => {
+                                const event = JSON.parse($script.text());
+                                const target = {
+                                    '@context': 'http://schema.org',
+                                    '@type': 'Event',
+                                    'name': title,
+                                    'description': 'Our wedding',
+                                    'startDate': startDateStr,
+                                    'location': {
+                                        '@type': 'Place',
+                                        'name': locationName
+                                    },
+                                    'image': [
+                                        'http://localhost:10004/real/client/sparrow.jpg',
+                                        'http://localhost:10004/real/client/couple.jpg',
+                                        'http://localhost:10004/real/client/ceremony.jpg',
+                                    ]
+                                };
+
+                                expect(event['startDate']).to.eql(target['startDate']);
+                                expect(event).to.eql(target);
+                            });
                         }
 
                         if (breadcrumbName != undefined) {
-                            cy.get('head > script[type=\'application/ld+json\']').first().should('exist');
-                            cy.get('head > script[type=\'application/ld+json\']').first().then($script => {
+                            // Breadcrumb microdata
+                            cy.get('head > script[type=\'application/ld+json\']').first().next().should('exist');
+                            cy.get('head > script[type=\'application/ld+json\']').first().next().then($script => {
                                 const breadcrumbs = JSON.parse($script.text());
                                 const target = {
                                     '@context': 'http://schema.org',
@@ -250,6 +277,7 @@ Contact: ${CONTACT_EMAIL}
                                         }
                                     }]
                                 };
+
                                 expect(breadcrumbs).to.eql(target);
                             });
                         }
