@@ -34,11 +34,11 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
                         host={host}
                         realLink={realLink}
                         title={pageTitle}
-                        description={pageTitle} />
+                        pictureSet={event.pictureSet} />
                     <TwitterCard
                         host={host}
                         title={pageTitle}
-                        description={pageTitle} />
+                        pictureSet={event.pictureSet} />
                     <h2 className="subevent-page-title">
                         <span className={'subevent-page-glyph ' + subEvent.display.icon}></span>
                         <span>

@@ -56,11 +56,11 @@ class _HomePage extends React.Component<Props, State> {
                     host={realLink}
                     realLink={realLink}
                     title={event.title}
-                    description={event.title} />
+                    pictureSet={event.pictureSet} />
                 <TwitterCard
                     host={realLink}
                     title={event.title}
-                    description={event.title} />
+                    pictureSet={event.pictureSet} />
                 {subEventNavLinks}
             </div>
         );

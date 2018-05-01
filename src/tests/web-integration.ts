@@ -219,7 +219,7 @@ Contact: ${CONTACT_EMAIL}
                             cy.get('head > meta[property=\'og:title\']').should('have.attr', 'content', title);
                             cy.get('head > meta[property=\'og:description\']').should('have.attr', 'content', title);
                             cy.get('head > meta[property=\'og:site_name\']').should('have.attr', 'content', 'TruSpar');
-                            cy.get('head > meta[property=\'og:image\']').should('have.attr', 'content', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}real/client/home-page-hero.jpg`);
+                            cy.get('head > meta[property=\'og:image\']').should('have.attr', 'content', 'http://localhost:10004/real/client/sparrow.jpg');
                             // cy.get('head > meta[property=\'og:locale\']').should('have.attr', 'content', 'en');
                             cy.get('head > meta[property=\'fb:app_id\']').should('have.attr', 'content', FACEBOOK_APP_ID);
 
@@ -230,7 +230,7 @@ Contact: ${CONTACT_EMAIL}
                             cy.get('head > meta[name=\'twitter:description\']').should('have.attr', 'content', title);
                             cy.get('head > meta[name=\'twitter:creator\']').should('have.attr', 'content', '@trusparevents');
                             cy.get('head > meta[name=\'twitter:site\']').should('have.attr', 'content', '@trusparevents');
-                            cy.get('head > meta[name=\'twitter:image\']').should('have.attr', 'content', `${event.homeUri(Env.Local, ORIGIN_DOMAIN_AND_PORT)}real/client/home-page-hero.jpg`);
+                            cy.get('head > meta[name=\'twitter:image\']').should('have.attr', 'content', 'http://localhost:10004/real/client/sparrow.jpg');
                         }
                     });
                 });
