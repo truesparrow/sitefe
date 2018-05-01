@@ -19,12 +19,13 @@ interface FacebookOpenGraphProps {
 export function FacebookOpenGraph(props: FacebookOpenGraphProps) {
     return (
         <Helmet>
+            <meta property="og:type" content="website" />
             <meta property="og:url" content={props.realLink} />
-            <meta property="og:type" content="article" />
             <meta property="og:title" content={props.title} />
             <meta property="og:description" content={props.title} />
             <meta property="og:site_name" content={commonText.siteName[config.LANG()]} />
             <meta property="og:image" content={props.pictureSet.pictures[0].mainImage.uri} />
+            <meta property="og:image:alt" content={props.title} />
             <meta property="fb:app_id" content={config.FACEBOOK_APP_ID} />
         </Helmet>
     );
