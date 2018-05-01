@@ -183,8 +183,8 @@ Contact: ${CONTACT_EMAIL}
         });
     });
 
-    describe('Page-level machine information', () => {
-        for (const { path, title, robotsMeta, failOnStatusCode, skipCanonical } of ALL_EVENT1_PAGES) {
+    describe.only('Page-level machine information', () => {
+        for (const { path, title, robotsMeta, failOnStatusCode, skipCanonical, breadcrumbName } of ALL_EVENT1_PAGES) {
             it(`/${path}`, () => {
                 cy.loginAsUser('user1.json').then(([sessionToken, _session, _data]) => {
                     cy.addEvent(sessionToken, 'event1.json').then(event => {
@@ -221,7 +221,7 @@ Contact: ${CONTACT_EMAIL}
                             cy.get('head > meta[property=\'og:description\']').should('have.attr', 'content', title);
                             cy.get('head > meta[property=\'og:site_name\']').should('have.attr', 'content', 'TruSpar');
                             cy.get('head > meta[property=\'og:image\']').should('have.attr', 'content', 'http://localhost:10004/real/client/sparrow.jpg');
-                            cy.get('head > meta[property=\'og:image\']').should('have.attr', 'content', title);
+                            cy.get('head > meta[property=\'og:image:alt\']').should('have.attr', 'content', title);
                             cy.get('head > meta[property=\'fb:app_id\']').should('have.attr', 'content', FACEBOOK_APP_ID);
 
                             // Twitter Card
@@ -232,6 +232,26 @@ Contact: ${CONTACT_EMAIL}
                             cy.get('head > meta[name=\'twitter:creator\']').should('have.attr', 'content', '@trusparevents');
                             cy.get('head > meta[name=\'twitter:site\']').should('have.attr', 'content', '@trusparevents');
                             cy.get('head > meta[name=\'twitter:image\']').should('have.attr', 'content', 'http://localhost:10004/real/client/sparrow.jpg');
+                        }
+
+                        if (breadcrumbName != undefined) {
+                            cy.get('head > script[type=\'application/ld+json\']').first().should('exist');
+                            cy.get('head > script[type=\'application/ld+json\']').first().then($script => {
+                                const breadcrumbs = JSON.parse($script.text());
+                                const target = {
+                                    '@context': 'http://schema.org',
+                                    '@type': 'BreadcrumbList',
+                                    'itemListElement': [{
+                                        '@type': 'ListItem',
+                                        'position': 1,
+                                        'item': {
+                                            '@id': thePath,
+                                            'name': breadcrumbName
+                                        }
+                                    }]
+                                };
+                                expect(breadcrumbs).to.eql(target);
+                            });
                         }
                     });
                 });

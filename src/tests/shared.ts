@@ -22,6 +22,7 @@ interface PageInfo {
     robotsMeta: string;
     skipCanonical?: boolean;
     failOnStatusCode?: boolean;
+    breadcrumbName?: string;
 }
 
 
@@ -34,17 +35,20 @@ export const ALL_EVENT1_PAGES: PageInfo[] = [
     {
         path: 'civil-ceremony',
         title: 'Our wedding - Civil Ceremony',
-        robotsMeta: 'index,follow'
+        robotsMeta: 'index,follow',
+        breadcrumbName: 'Civil Ceremony'
     },
     {
         path: 'religious-ceremony',
         title: 'Our wedding - Religious Ceremony',
-        robotsMeta: 'index,follow'
+        robotsMeta: 'index,follow',
+        breadcrumbName: 'Religious Ceremony'
     },
     {
         path: 'reception',
         title: 'Our wedding - Reception',
-        robotsMeta: 'index,follow'
+        robotsMeta: 'index,follow',
+        breadcrumbName: 'Reception'
     },
     {
         path: 'inexistent-page',

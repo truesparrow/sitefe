@@ -49,3 +49,30 @@ export function TwitterCard(props: TwitterCardProps) {
         </Helmet>
     );
 }
+
+interface MicrodataBreadcrumnsProps {
+    items: { url: string, name: string }[]
+}
+
+export function MicrodataBreadcrumbs(props: MicrodataBreadcrumnsProps) {
+    return (
+        <Helmet>
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    '@context': 'http://schema.org',
+                    '@type': 'BreadcrumbList',
+                    'itemListElement': props.items.map((item, index) => {
+                        return {
+                            '@type': 'ListItem',
+                            'position': index + 1,
+                            'item': {
+                                '@id': item.url,
+                                'name': item.name
+                            }
+                        }
+                    })
+                })}
+            </script>
+        </Helmet>
+    );
+}

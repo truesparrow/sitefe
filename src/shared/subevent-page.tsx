@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet'
 import { NavLink } from 'react-router-dom'
 
 import { Event, SubEventDetails } from '@truesparrow/content-sdk-js'
-import { FacebookOpenGraph, TwitterCard } from './web-metadata'
+import { FacebookOpenGraph, MicrodataBreadcrumbs, TwitterCard } from './web-metadata'
 
 import * as config from './config'
 
@@ -39,6 +39,11 @@ export function subEventPage(event: Event, subEvent: SubEventDetails) {
                         host={host}
                         title={pageTitle}
                         pictureSet={event.pictureSet} />
+                    <MicrodataBreadcrumbs
+                        items={[{
+                            url: realLink,
+                            name: subEvent.title[config.LANG()]
+                        }]} />
                     <h2 className="subevent-page-title">
                         <span className={'subevent-page-glyph ' + subEvent.display.icon}></span>
                         <span>
