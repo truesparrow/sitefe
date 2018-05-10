@@ -9,7 +9,8 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "strictNullChecks": true,
-        "sourceMap": true,
+        "inlineSourceMap": true,
+        "inlineSources": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "outDir": "./out"
